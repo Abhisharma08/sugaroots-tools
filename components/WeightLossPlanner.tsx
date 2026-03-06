@@ -11,7 +11,7 @@ import { addDays, format } from 'date-fns';
 
 const plannerSchema = z.object({
     targetWeight: z
-        .number({ invalid_type_error: 'Enter a valid weight' })
+        .number({ error: 'Enter a valid weight' })
         .min(20, 'Must be at least 20 kg')
         .max(300, 'Must be under 300 kg'),
     pace: z.enum(['mild', 'moderate', 'aggressive'], {
@@ -23,8 +23,8 @@ type PlannerFormValues = z.infer<typeof plannerSchema>;
 
 function inputCls(hasError: boolean, accent: string = 'emerald') {
     return `w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 border rounded-xl transition-all outline-none text-zinc-900 dark:text-zinc-100 ${hasError
-            ? 'border-red-400 dark:border-red-500 focus:ring-2 focus:ring-red-400 focus:border-red-400'
-            : `border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-${accent}-500 focus:border-${accent}-500`
+        ? 'border-red-400 dark:border-red-500 focus:ring-2 focus:ring-red-400 focus:border-red-400'
+        : `border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-${accent}-500 focus:border-${accent}-500`
         }`;
 }
 

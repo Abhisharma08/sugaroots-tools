@@ -10,16 +10,16 @@ import { Activity, User, Ruler, Weight, Flame, AlertCircle, CheckCircle2 } from 
 
 const bmrSchema = z.object({
     age: z
-        .number({ invalid_type_error: 'Enter a valid age' })
+        .number({ error: 'Enter a valid age' })
         .min(1, 'Must be at least 1')
         .max(120, 'Must be under 120'),
     gender: z.enum(['male', 'female'], { message: 'Select a gender' }),
     weight: z
-        .number({ invalid_type_error: 'Enter a valid weight' })
+        .number({ error: 'Enter a valid weight' })
         .min(20, 'Must be at least 20 kg')
         .max(300, 'Must be under 300 kg'),
     height: z
-        .number({ invalid_type_error: 'Enter a valid height' })
+        .number({ error: 'Enter a valid height' })
         .min(50, 'Must be at least 50 cm')
         .max(250, 'Must be under 250 cm'),
     activityLevel: z.number(),
@@ -30,8 +30,8 @@ type BMRFormValues = z.infer<typeof bmrSchema>;
 // Helper: input class based on error state
 function inputCls(hasError: boolean) {
     return `w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 border rounded-xl transition-all outline-none text-zinc-900 dark:text-zinc-100 ${hasError
-            ? 'border-red-400 dark:border-red-500 focus:ring-2 focus:ring-red-400 focus:border-red-400'
-            : 'border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
+        ? 'border-red-400 dark:border-red-500 focus:ring-2 focus:ring-red-400 focus:border-red-400'
+        : 'border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
         }`;
 }
 

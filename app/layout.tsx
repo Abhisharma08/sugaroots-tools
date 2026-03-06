@@ -3,8 +3,18 @@ import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/ThemeProvider';
 
 export const metadata: Metadata = {
-    title: 'Fitness App',
-    description: 'Your Personal Fitness Hub',
+    title: {
+        default: 'SugaRoot Tools — Your Personal Fitness Hub',
+        template: '%s | SugaRoot Tools',
+    },
+    description:
+        'Track your goals, calculate your macros, and crush your fitness targets. BMR calculator, TDEE estimator, and weight loss planner in one place.',
+    metadataBase: new URL('https://sugaroots-tools.vercel.app'),
+    openGraph: {
+        title: 'SugaRoot Tools',
+        description: 'Your personal fitness hub — BMR, TDEE, weight loss planning and more.',
+        type: 'website',
+    },
 };
 
 export default function RootLayout({

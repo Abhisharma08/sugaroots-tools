@@ -1,0 +1,13 @@
+{
+    "verify-user": {
+        "success": true,
+        "message": "User has an active subscription.",
+        "data": {
+            "user_id": 999,
+            "display_name": "Akshat Sharma",
+            "email": "aksharma223@gmail.com",
+            "first_name": "Akshat",
+            "last_name": "Sharma"
+        }
+    }
+}

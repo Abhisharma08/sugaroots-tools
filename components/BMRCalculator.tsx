@@ -210,11 +210,11 @@ export default function BMRCalculator() {
                                     {...register('activityLevel', { valueAsNumber: true })}
                                     className={`${inputCls(false)} appearance-none pr-10`}
                                 >
-                                    <option value={1.2}>Sedentary (Little to no exercise)</option>
-                                    <option value={1.375}>Light Active (Exercise 1-3 days/wk)</option>
-                                    <option value={1.55}>Moderate Active (Exercise 3-5 days/wk)</option>
-                                    <option value={1.725}>Very Active (Hard exercise 6-7 days/wk)</option>
-                                    <option value={1.9}>Extra Active (Very hard exercise/physical job)</option>
+                                    <option value={1.2}>Sedentary (little or no exercise)</option>
+                                    <option value={1.38}>Light Activity (light exercise 1-3 days/week)</option>
+                                    <option value={1.55}>Moderate Activity (exercise 3-5 days/week)</option>
+                                    <option value={1.73}>Active (hard exercise 6-7 days/week)</option>
+                                    <option value={1.9}>Very Active (very intense training or physical job)</option>
                                 </select>
                                 <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-zinc-400">
                                     <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">

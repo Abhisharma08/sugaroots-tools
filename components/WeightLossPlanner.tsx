@@ -7,7 +7,6 @@ import { z } from 'zod';
 import { useFitnessStore } from '../store/useFitnessStore';
 import { useAuth } from '@/components/AuthProvider';
 import { Target, TrendingDown, Clock, Move, AlertCircle, CheckCircle2 } from 'lucide-react';
-import { addDays, format } from 'date-fns';
 
 const plannerSchema = z.object({
     targetWeight: z
@@ -68,29 +67,9 @@ export default function WeightLossPlanner() {
         };
     }, [watch, updateGoals, saveToFirestore, user]);
 
-    // Timeline calculation
-    const calculateTimeline = () => {
-        const weightDifference = profile.weight - goals.targetWeight;
-        if (weightDifference <= 0) return null;
 
-        let weeklyDeficitKcal = 0;
-        if (goals.pace === 'mild') weeklyDeficitKcal = 250 * 7;
-        if (goals.pace === 'moderate') weeklyDeficitKcal = 500 * 7;
-        if (goals.pace === 'aggressive') weeklyDeficitKcal = 1000 * 7;
-
-        const kgPerWeek = weeklyDeficitKcal / 7700;
-        const weeksToGoal = Math.ceil(weightDifference / kgPerWeek);
-        const estimatedDate = addDays(new Date(), weeksToGoal * 7);
-
-        return {
-            weeks: weeksToGoal,
-            date: format(estimatedDate, 'MMMM d, yyyy'),
-            rate: kgPerWeek.toFixed(2),
-        };
-    };
-
-    const timeline = calculateTimeline();
-    const isLosingWeight = profile.weight > goals.targetWeight;
+    // Local validation logic since Zod schema doesn't have access to profile
+    const isTargetValid = goals.targetWeight < profile.weight;
 
     return (
         <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-3xl shadow-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 transition-all duration-300 mt-8">
@@ -124,7 +103,7 @@ export default function WeightLossPlanner() {
                             <input
                                 type="number"
                                 {...register('targetWeight', { valueAsNumber: true })}
-                                className={inputCls(!!errors.targetWeight)}
+                                className={inputCls(!!errors.targetWeight || !isTargetValid)}
                                 placeholder="e.g. 65"
                                 min={20}
                                 max={300}
@@ -134,6 +113,12 @@ export default function WeightLossPlanner() {
                                 <p className="text-red-500 text-xs flex items-center gap-1">
                                     <AlertCircle className="w-3 h-3 flex-shrink-0" />
                                     {errors.targetWeight.message}
+                                </p>
+                            )}
+                            {!errors.targetWeight && !isTargetValid && (
+                                <p className="text-red-500 text-xs flex items-center gap-1">
+                                    <AlertCircle className="w-3 h-3 flex-shrink-0" />
+                                    Goal weight must be less than current weight.
                                 </p>
                             )}
                         </div>
@@ -149,9 +134,9 @@ export default function WeightLossPlanner() {
                                     {...register('pace')}
                                     className={`${inputCls(!!errors.pace)} appearance-none pr-10`}
                                 >
-                                    <option value="mild">Mild (±0.25 kg/wk)</option>
-                                    <option value="moderate">Moderate (±0.5 kg/wk)</option>
-                                    <option value="aggressive">Aggressive (±1.0 kg/wk)</option>
+                                    <option value="mild">Steady (0.25 kg/wk)</option>
+                                    <option value="moderate">Moderate (0.50 kg/wk)</option>
+                                    <option value="aggressive">Aggressive (0.75 kg/wk)</option>
                                 </select>
                                 <div className="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none text-zinc-400">
                                     <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
@@ -168,7 +153,7 @@ export default function WeightLossPlanner() {
                         </div>
 
                         {/* Validation Status */}
-                        {hasErrors && (
+                        {(hasErrors || !isTargetValid) && (
                             <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
                                 <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
                                 <p className="text-sm text-red-600 dark:text-red-400">
@@ -176,7 +161,7 @@ export default function WeightLossPlanner() {
                                 </p>
                             </div>
                         )}
-                        {!hasErrors && isValid && (
+                        {!hasErrors && isValid && isTargetValid && (
                             <div className="flex items-center gap-2 p-3 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl">
                                 <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
                                 <p className="text-sm text-emerald-600 dark:text-emerald-400">
@@ -194,86 +179,76 @@ export default function WeightLossPlanner() {
                 </div>
 
                 {/* Actionable Summary Section */}
-                <div className={`p-8 lg:p-10 flex flex-col justify-center space-y-8 bg-zinc-50/50 dark:bg-zinc-900/50 relative transition-opacity duration-300 ${hasErrors ? 'opacity-50 pointer-events-none' : ''}`}>
+                <div className={`p-8 lg:p-10 flex flex-col justify-between space-y-6 bg-zinc-50/50 dark:bg-zinc-900/50 relative transition-opacity duration-300 ${hasErrors || !isTargetValid ? 'opacity-50 pointer-events-none' : ''}`}>
 
-                    {/* Target Calories */}
-                    <div className="bg-white dark:bg-zinc-800 rounded-2xl p-6 shadow-sm border border-zinc-100 dark:border-zinc-700 relative overflow-hidden group hover:shadow-md transition-all">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500" />
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <p className="text-zinc-500 dark:text-zinc-400 text-sm font-medium uppercase tracking-wider mb-1">
-                                    Daily Calorie Target
-                                </p>
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-4xl font-bold text-zinc-800 dark:text-zinc-100">
-                                        {derived.dailyCalorieTarget}
-                                    </span>
-                                    <span className="text-zinc-500 font-medium">kcal</span>
-                                </div>
+                    <div className="space-y-6">
+                        {/* Summary Headers */}
+                        <div className="grid grid-cols-2 gap-4">
+                            <div className="bg-white dark:bg-zinc-800 rounded-xl p-4 shadow-sm border border-zinc-100 dark:border-zinc-700">
+                                <p className="text-xs font-medium text-zinc-500 uppercase">Fat to Lose</p>
+                                <p className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 mt-1">{derived.fatToLose} kg</p>
                             </div>
-                            <div className="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg">
-                                <Target className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                            <div className="bg-white dark:bg-zinc-800 rounded-xl p-4 shadow-sm border border-zinc-100 dark:border-zinc-700">
+                                <p className="text-xs font-medium text-zinc-500 uppercase">Estimated Time</p>
+                                <p className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 mt-1">{derived.daysRequired} days</p>
                             </div>
                         </div>
-                        <p className="text-sm mt-3 text-zinc-500 leading-relaxed">
-                            Based on a {goals.pace} {isLosingWeight ? 'deficit' : 'surplus'} from your TDEE.
-                        </p>
+
+                        {/* Target Calories */}
+                        <div className="bg-white dark:bg-zinc-800 rounded-2xl p-6 shadow-sm border border-zinc-100 dark:border-zinc-700 relative overflow-hidden group hover:shadow-md transition-all">
+                            <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500" />
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <p className="text-zinc-500 dark:text-zinc-400 text-sm font-medium uppercase tracking-wider mb-1">
+                                        Daily Nutrition Target
+                                    </p>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+                                            Eat {derived.recommendedDailyCalories} calories per day
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="p-2 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg shrink-0 ml-4">
+                                    <Target className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Exercise Target */}
+                        <div className="bg-white dark:bg-zinc-800 rounded-2xl p-6 shadow-sm border border-zinc-100 dark:border-zinc-700 relative overflow-hidden group hover:shadow-md transition-all">
+                            <div className="absolute top-0 left-0 w-1 h-full bg-orange-500" />
+                            <div className="flex items-start justify-between">
+                                <div>
+                                    <p className="text-zinc-500 dark:text-zinc-400 text-sm font-medium uppercase tracking-wider mb-1">
+                                        Daily Activity Target
+                                    </p>
+                                    <div className="flex items-baseline gap-2">
+                                        <span className="text-xl font-bold text-zinc-800 dark:text-zinc-100">
+                                            Burn {derived.exerciseBurn} calories through exercise
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg shrink-0 ml-4">
+                                    <Move className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Warnings */}
+                        {goals.pace === 'aggressive' && (
+                            <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
+                                <p className="text-sm text-amber-800 dark:text-amber-400 flex gap-2">
+                                    <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                                    <span>Aggressive weight loss may not be suitable for everyone. Please consult your doctor before following this plan.</span>
+                                </p>
+                            </div>
+                        )}
                     </div>
 
-                    {/* Exercise Target */}
-                    <div className="bg-white dark:bg-zinc-800 rounded-2xl p-6 shadow-sm border border-zinc-100 dark:border-zinc-700 relative overflow-hidden group hover:shadow-md transition-all">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-orange-500" />
-                        <div className="flex items-start justify-between">
-                            <div>
-                                <p className="text-zinc-500 dark:text-zinc-400 text-sm font-medium uppercase tracking-wider mb-1">
-                                    Active Burn Target
-                                </p>
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-4xl font-bold text-zinc-800 dark:text-zinc-100">
-                                        {derived.dailyExerciseBurnTarget}
-                                    </span>
-                                    <span className="text-zinc-500 font-medium">kcal</span>
-                                </div>
-                            </div>
-                            <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
-                                <Move className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-                            </div>
-                        </div>
-                        <p className="text-sm mt-3 text-zinc-500 leading-relaxed">
-                            Calories burned through daily activity and exercise.
-                        </p>
+                    {/* Disclaimer */}
+                    <div className="text-xs text-zinc-400 dark:text-zinc-500 text-center px-4 pt-4 border-t border-zinc-200 dark:border-zinc-700">
+                        Weight loss recommendations are estimates based on metabolic calculations. Individual results may vary. Please consult a doctor before starting any weight loss program.
                     </div>
-
-                    {/* Timeline Estimate */}
-                    {timeline ? (
-                        <div className="bg-gradient-to-br from-zinc-800 to-zinc-900 dark:from-zinc-900 dark:to-black rounded-2xl p-6 shadow-md border border-zinc-700 relative overflow-hidden text-white">
-                            <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-emerald-500/20 rounded-full blur-2xl pointer-events-none" />
-                            <div className="relative z-10">
-                                <div className="flex items-center gap-2 mb-4">
-                                    <Clock className="w-5 h-5 text-emerald-400" />
-                                    <h3 className="font-medium tracking-wide">Estimated Timeline</h3>
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <p className="text-3xl font-bold text-white">
-                                        ~{timeline.weeks} Weeks
-                                    </p>
-                                    <p className="text-zinc-400 text-sm">
-                                        Reaching goal by <span className="text-zinc-200 font-medium">{timeline.date}</span>
-                                    </p>
-                                </div>
-                                <div className="mt-4 text-xs text-zinc-500">
-                                    Losing roughly {timeline.rate}kg per week based on pace.
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="bg-zinc-100 dark:bg-zinc-800/50 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-700 text-center flex flex-col items-center justify-center">
-                            <Target className="w-8 h-8 text-zinc-400 mb-2 opacity-50" />
-                            <p className="text-zinc-500 dark:text-zinc-400 text-sm">
-                                Set a goal weight lower than your current weight to see the estimated timeline.
-                            </p>
-                        </div>
-                    )}
                 </div>
             </div>
         </div>

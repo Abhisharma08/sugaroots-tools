@@ -3,7 +3,7 @@ import { getAdminAuth } from '@/lib/firebase-admin';
 
 export async function POST(request: Request) {
     try {
-        const { login_id } = await request.json();
+        const { login_id, otp } = await request.json();
         const adminAuth = getAdminAuth();
 
         if (!login_id || typeof login_id !== 'string') {
@@ -13,12 +13,24 @@ export async function POST(request: Request) {
             );
         }
 
-        // Step 1: Verify subscription via WordPress
-        const wpUrl = process.env.NEXT_PUBLIC_WP_URL || 'https://theSugaRootss.com';
-        const wpRes = await fetch(`${wpUrl}/wp-json/fitness-app/v1/verify-user`, {
+        if (!otp || typeof otp !== 'string' || otp.trim().length !== 6) {
+            return NextResponse.json(
+                { error: 'Please enter the 6-digit OTP.' },
+                { status: 400 }
+            );
+        }
+
+        // Step 1: Verify OTP via WordPress
+        const wpUrl = process.env.NEXT_PUBLIC_WP_URL || 'https://thesugaroots.com';
+        const apiKey = process.env.FITNESS_APP_SECRET_KEY || 'yoursupersecrettestkey123';
+        
+        const wpRes = await fetch(`${wpUrl}/wp-json/fitness-app/v1/verify-otp`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ login_id }),
+            headers: { 
+                'Content-Type': 'application/json',
+                'x-fitness-api-key': apiKey
+            },
+            body: JSON.stringify({ login_id, otp }),
         });
 
         const wpData = await wpRes.json();
@@ -43,6 +55,7 @@ export async function POST(request: Request) {
             firebaseToken,
             userId: firebaseUid,
             user: {
+                uid: firebaseUid,
                 displayName: wpUser.display_name || '',
                 email: wpUser.email || login_id,
                 firstName: wpUser.first_name || '',

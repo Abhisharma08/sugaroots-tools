@@ -1,0 +1,34 @@
+﻿
+> sugaroots-tools@1.0.0 build
+> next build
+
+Γû▓ Next.js 16.1.6 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 4.6s
+  Running TypeScript ...
+  Collecting page data using 11 workers ...
+  Generating static pages using 11 workers (0/9) ...
+  Generating static pages using 11 workers (2/9) 
+  Generating static pages using 11 workers (4/9) 
+  Generating static pages using 11 workers (6/9) 
+Γ£ô Generating static pages using 11 workers (9/9) in 1187.2ms
+  Finalizing page optimization ...
+
+Route (app)
+Γöî Γùï /
+Γö£ Γùï /_not-found
+Γö£ ╞Æ /api/auth/firebase-token
+Γö£ ╞Æ /api/auth/request-otp
+Γö£ ╞Æ /api/auth/session
+Γö£ Γùï /dashboard
+Γö£ Γùï /dashboard/tools
+Γöö Γùï /login
+
+
+╞Æ Proxy (Middleware)
+
+Γùï  (Static)   prerendered as static content
+╞Æ  (Dynamic)  server-rendered on demand
+

@@ -3,7 +3,7 @@
 import BMRCalculator from '@/components/BMRCalculator';
 import WeightLossPlanner from '@/components/WeightLossPlanner';
 import { Tabs, type TabItem } from '@/components/ui/Tabs';
-import { Activity, Target } from 'lucide-react';
+import { Activity, Target, ListChecks } from 'lucide-react';
 
 export default function ToolsPage() {
     const toolsTabs: TabItem[] = [

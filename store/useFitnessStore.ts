@@ -26,12 +26,22 @@ export interface Macros {
 export interface DerivedState {
   bmr: number;
   tdee: number;
-  dailyCalorieTarget: number;
-  dailyExerciseBurnTarget: number;
   macros: Macros;
+  // New Weight Loss Calculator fields
+  fatToLose: number;
+  totalCalorieDeficit: number;
+  weeklyWeightLoss: number;
+  weeklyCalorieDeficit: number;
+  dailyCalorieDeficit: number;
+  foodDeficit: number;
+  exerciseBurn: number;
+  recommendedDailyCalories: number;
+  weeksRequired: number;
+  daysRequired: number;
 }
 
 export interface UserInfo {
+  uid: string;
   displayName: string;
   email: string;
   firstName: string;
@@ -60,39 +70,83 @@ const calculateDerivedState = (profile: UserProfile, goals: Goals): DerivedState
   // 2. Calculate TDEE
   const tdee = bmr * profile.activityLevel;
 
-  // 3. Calculate Daily Calorie Target
-  let calorieAdjustment = 0;
-  if (goals.pace === 'mild') calorieAdjustment = 250;
-  if (goals.pace === 'moderate') calorieAdjustment = 500;
-  if (goals.pace === 'aggressive') calorieAdjustment = 1000;
+  // === Weight Loss Calculator Logic (Steps 1-10) ===
 
-  // Determine if losing or gaining weight based on target vs current weight
-  const isLosing = profile.weight > goals.targetWeight;
-  const isGaining = profile.weight < goals.targetWeight;
+  // Step 1 - Fat to Lose
+  // Prevent negative fat to lose, but let UI handle the error state
+  const fatToLose = Math.max(0, profile.weight - goals.targetWeight);
 
-  let dailyCalorieTarget = tdee;
-  if (isLosing) {
-    dailyCalorieTarget = tdee - calorieAdjustment;
-  } else if (isGaining) {
-    dailyCalorieTarget = tdee + calorieAdjustment;
+  // Step 2 - Total Calories to Burn
+  const totalCalorieDeficit = fatToLose * 7700;
+
+  // Step 3 - Weekly Fat Loss Based on Speed
+  let weeklyWeightLoss = 0.50; // default moderate
+  if (goals.pace === 'mild') weeklyWeightLoss = 0.25; // steady
+  if (goals.pace === 'moderate') weeklyWeightLoss = 0.50;
+  if (goals.pace === 'aggressive') weeklyWeightLoss = 0.75;
+
+  // Step 4 - Weekly Calorie Deficit
+  const weeklyCalorieDeficit = weeklyWeightLoss * 7700;
+
+  // Step 5 - Daily Calorie Deficit
+  const baseDailyCalorieDeficit = weeklyCalorieDeficit / 7;
+
+  // Step 6 - Food Deficit and Exercise Burn (70/30 split)
+  let foodDeficit = baseDailyCalorieDeficit * 0.70;
+  let exerciseBurn = baseDailyCalorieDeficit * 0.30;
+
+  // Step 7 - Recommended Daily Calories
+  let recommendedDailyCalories = tdee - foodDeficit;
+
+  // Step 8 - Safety Check (BMR Rule)
+  // System must enforce: recommended_daily_calories >= BMR
+  if (recommendedDailyCalories < bmr) {
+    // Option 1: Reduce daily deficit from food to match BMR exactly
+    const maxSafeFoodDeficit = tdee - bmr;
+    foodDeficit = Math.max(0, maxSafeFoodDeficit); // Ensure it doesn't go negative if TDEE < BMR (rare edge case)
+    recommendedDailyCalories = tdee - foodDeficit;
+
+    // We adjust exercise burn to try and make up the difference to reach the target deficit,
+    // Note: The spec said "reduce_daily_deficit" as preferred action.
+    // If we simply cap foodDeficit and leave exerciseBurn alone, the daily deficit naturally reduces.
+    // So we don't inflate exerciseBurn, we just accept a slower pace.
   }
 
-  // 4. Calculate Daily Exercise Burn Target
-  const dailyExerciseBurnTarget = Math.max(0, tdee - bmr);
+  // Calculate actual effective daily deficit after safety adjustments
+  const actualDailyCalorieDeficit = foodDeficit + exerciseBurn;
+
+  // Recalculate weeks based on the actual daily deficit instead of the theoretical one
+  const actualWeeklyDeficit = actualDailyCalorieDeficit * 7;
+  const actualWeeklyWeightLoss = actualWeeklyDeficit / 7700;
+
+  // Step 9 - Weeks Required to Reach Goal
+  const weeksRequired = actualWeeklyWeightLoss > 0 ? fatToLose / actualWeeklyWeightLoss : 0;
+
+  // Step 10 - Days Required
+  const daysRequired = weeksRequired * 7;
 
   // 5. Calculate Macros (Standard Split: 30% Protein, 40% Carbs, 30% Fats)
+  // Using the new recommendedDailyCalories which respects the BMR safety check
   const macros = {
-    protein: Math.round((dailyCalorieTarget * 0.3) / 4),
-    carbs: Math.round((dailyCalorieTarget * 0.4) / 4),
-    fats: Math.round((dailyCalorieTarget * 0.3) / 9),
+    protein: Math.round((recommendedDailyCalories * 0.3) / 4),
+    carbs: Math.round((recommendedDailyCalories * 0.4) / 4),
+    fats: Math.round((recommendedDailyCalories * 0.3) / 9),
   };
 
   return {
     bmr: Math.round(bmr),
     tdee: Math.round(tdee),
-    dailyCalorieTarget: Math.round(dailyCalorieTarget),
-    dailyExerciseBurnTarget: Math.round(dailyExerciseBurnTarget),
     macros,
+    fatToLose: Number(fatToLose.toFixed(2)),
+    totalCalorieDeficit: Math.round(totalCalorieDeficit),
+    weeklyWeightLoss: Number(actualWeeklyWeightLoss.toFixed(2)),
+    weeklyCalorieDeficit: Math.round(actualWeeklyDeficit),
+    dailyCalorieDeficit: Math.round(actualDailyCalorieDeficit),
+    foodDeficit: Math.round(foodDeficit),
+    exerciseBurn: Math.round(exerciseBurn),
+    recommendedDailyCalories: Math.round(recommendedDailyCalories),
+    weeksRequired: Math.ceil(weeksRequired),
+    daysRequired: Math.ceil(daysRequired),
   };
 };
 

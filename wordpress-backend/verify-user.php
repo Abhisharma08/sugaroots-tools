@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Fitness App API - Verify User
- * Description: Custom REST API endpoint to verify user subscription via PMPro by email or mobile number.
- * Version: 1.1
+ * Description: Custom REST API endpoint to verify user subscription via PMPro and support OTP authentication.
+ * Version: 1.2
  * Author: Abhimanyu Sharma
  */
 
@@ -11,57 +11,87 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Register the custom REST route
+// Register the custom REST routes
 add_action('rest_api_init', 'fitness_app_register_verify_user_route');
 
 function fitness_app_register_verify_user_route() {
+    // Legacy endpoint (might still be used or can be deprecated)
     register_rest_route('fitness-app/v1', '/verify-user', array(
         'methods'             => 'POST',
         'callback'            => 'fitness_app_verify_user_endpoint',
-        'permission_callback' => 'fitness_app_verify_user_permissions_check', // You can implement a proper API key check here
-        // Define args to enforce validation before the callback runs
+        'permission_callback' => 'fitness_app_verify_user_permissions_check',
         'args'                => array(
             'login_id' => array(
                 'required'          => true,
                 'validate_callback' => function ($param, $request, $key) {
                     return !empty($param) && is_string($param);
                 },
-                // Sanitize as text field. If it's an email, we'll validate it inside the callback
+                'sanitize_callback' => 'sanitize_text_field'
+            )
+        )
+    ));
+
+    // Request OTP endpoint
+    register_rest_route('fitness-app/v1', '/request-otp', array(
+        'methods'             => 'POST',
+        'callback'            => 'fitness_app_request_otp_endpoint',
+        'permission_callback' => 'fitness_app_verify_user_permissions_check',
+        'args'                => array(
+            'login_id' => array(
+                'required'          => true,
+                'validate_callback' => function ($param, $request, $key) {
+                    return !empty($param) && is_string($param);
+                },
+                'sanitize_callback' => 'sanitize_text_field'
+            )
+        )
+    ));
+
+    // Verify OTP endpoint
+    register_rest_route('fitness-app/v1', '/verify-otp', array(
+        'methods'             => 'POST',
+        'callback'            => 'fitness_app_verify_otp_endpoint',
+        'permission_callback' => 'fitness_app_verify_user_permissions_check',
+        'args'                => array(
+            'login_id' => array(
+                'required'          => true,
+                'validate_callback' => function ($param, $request, $key) {
+                    return !empty($param) && is_string($param);
+                },
+                'sanitize_callback' => 'sanitize_text_field'
+            ),
+            'otp' => array(
+                'required'          => true,
+                'validate_callback' => function ($param, $request, $key) {
+                    return !empty($param) && is_string($param);
+                },
                 'sanitize_callback' => 'sanitize_text_field'
             )
         )
     ));
 }
 
-// Basic permission check (allow public access or implement custom auth like API key header)
+// Basic permission check (API Key)
 function fitness_app_verify_user_permissions_check($request) {
-    /* 
-     * Example: check for a custom header to secure this endpoint from abuse.
-     * $api_key = $request->get_header('x-fitness-api-key');
-     * if ($api_key !== 'YOUR_SECRET_API_KEY') {
-     *     return new WP_Error('rest_forbidden', 'Invalid API key.', array('status' => 401));
-     * }
-     */
+    $api_key = $request->get_header('x-fitness-api-key');
+    // Ideally this is defined in wp-config.php or as a constant. For now we hardcode it to match Next.js env
+    $expected_key = defined('FITNESS_APP_SECRET_KEY') ? FITNESS_APP_SECRET_KEY : 'yoursupersecrettestkey123';
+    
+    if ($api_key !== $expected_key) {
+        return new WP_Error('rest_forbidden', 'Invalid API key.', array('status' => 401));
+    }
+    
     return true; 
 }
 
-// The main callback function
-function fitness_app_verify_user_endpoint($request) {
-    // 1. Get and sanitize the input
-    $login_id = $request->get_param('login_id');
-
-    $user_id = 0;
-
-    // 2. Check if the login_id is an email
+// Helper function to get user ID by email or mobile
+function get_fitness_app_user_by_login_id($login_id) {
     if (is_email($login_id)) {
         $user = get_user_by('email', $login_id);
         if ($user) {
-            $user_id = $user->ID;
+            return $user->ID;
         }
     } else {
-        // Not an email, so we assume it's a mobile number.
-        // Query WP users by the 'mobile_number' meta key.
-        // Note: Adjust the 'meta_key' value if your system stores it under a different name (e.g., 'billing_phone')
         $users = get_users(array(
             'meta_key'   => 'mobile_number',
             'meta_value' => $login_id,
@@ -71,36 +101,121 @@ function fitness_app_verify_user_endpoint($request) {
         ));
 
         if (!empty($users)) {
-            $user = $users[0];
-            $user_id = $user->ID;
+            return $users[0]->ID;
         }
     }
+    return 0;
+}
 
-    // 3. Handle User Not Found
+// Endpoint 1: Request OTP
+function fitness_app_request_otp_endpoint($request) {
+    $login_id = $request->get_param('login_id');
+    $user_id = get_fitness_app_user_by_login_id($login_id);
+
     if (!$user_id) {
-        return new WP_Error(
-            'user_not_found',
-            'No user found with the provided email or mobile number.',
-            array('status' => 404)
-        );
+        return new WP_Error('user_not_found', 'No user found with the provided email or mobile number.', array('status' => 404));
     }
 
-    // 4. Verify Active Subscription with PMPro
     if (!function_exists('pmpro_hasMembershipLevel')) {
-        return new WP_Error(
-            'pmpro_missing',
-            'Paid Memberships Pro plugin is not active on the server.',
-            array('status' => 500)
-        );
+        return new WP_Error('pmpro_missing', 'Paid Memberships Pro plugin is not active on the server.', array('status' => 500));
     }
 
-    // Checking if they have *any* active membership level
-    $has_active_subscription = pmpro_hasMembershipLevel(0, $user_id);
-    
-    // Get ALL membership levels for debugging
-    $all_levels = function_exists('pmpro_getMembershipLevelsForUser') ? pmpro_getMembershipLevelsForUser($user_id) : 'pmpro_getMembershipLevelsForUser not found';
+    if (!pmpro_hasMembershipLevel(0, $user_id)) {
+        return new WP_Error('forbidden', 'User does not have an active subscription for any required level.', array('status' => 403));
+    }
 
-    // 5. Return success or forbidden response
+    // Generate 6-digit OTP
+    $otp = sprintf("%06d", mt_rand(100000, 999999));
+    $expires = time() + (5 * 60); // 5 minutes
+
+    update_user_meta($user_id, '_fitness_login_otp', md5($otp));
+    update_user_meta($user_id, '_fitness_login_otp_expires', $expires);
+
+    // Send the OTP
+    if (is_email($login_id)) {
+        $user_obj = get_userdata($user_id);
+        $subject = "Your Login OTP for Fitness App";
+        $message = "Your one-time password is: " . $otp . "\n\nThis code will expire in 5 minutes.";
+        wp_mail($login_id, $subject, $message);
+    } else {
+        // Log to error_log (SMS Provider to be added here in the future)
+        error_log("FITNESS APP OTP for Mobile {$login_id}: {$otp}");
+    }
+
+    return rest_ensure_response(array(
+        'success' => true,
+        'message' => 'OTP generated and sent.'
+    ));
+}
+
+// Endpoint 2: Verify OTP
+function fitness_app_verify_otp_endpoint($request) {
+    $login_id = $request->get_param('login_id');
+    $otp_input = $request->get_param('otp');
+
+    $user_id = get_fitness_app_user_by_login_id($login_id);
+    if (!$user_id) {
+        return new WP_Error('user_not_found', 'No user found.', array('status' => 404));
+    }
+
+    if (!function_exists('pmpro_hasMembershipLevel') || !pmpro_hasMembershipLevel(0, $user_id)) {
+        return new WP_Error('forbidden', 'User does not have an active subscription.', array('status' => 403));
+    }
+
+    $stored_otp = get_user_meta($user_id, '_fitness_login_otp', true);
+    $expires = get_user_meta($user_id, '_fitness_login_otp_expires', true);
+
+    if (!$stored_otp || !$expires) {
+        return new WP_Error('invalid_otp', 'No OTP requested or OTP expired.', array('status' => 400));
+    }
+
+    if (time() > $expires) {
+        delete_user_meta($user_id, '_fitness_login_otp');
+        delete_user_meta($user_id, '_fitness_login_otp_expires');
+        return new WP_Error('otp_expired', 'Your OTP has expired. Please request a new one.', array('status' => 400));
+    }
+
+    if (md5($otp_input) !== $stored_otp) {
+        return new WP_Error('invalid_otp', 'The OTP provided is incorrect.', array('status' => 400));
+    }
+
+    // OTP is valid
+    delete_user_meta($user_id, '_fitness_login_otp');
+    delete_user_meta($user_id, '_fitness_login_otp_expires');
+
+    $user_obj = get_userdata($user_id);
+    $all_levels = function_exists('pmpro_getMembershipLevelsForUser') ? pmpro_getMembershipLevelsForUser($user_id) : '';
+
+    return rest_ensure_response(array(
+        'success' => true,
+        'message' => 'OTP verified successfully.',
+        'data'    => array(
+            'user_id'      => $user_id,
+            'display_name' => $user_obj->display_name,
+            'email'        => $user_obj->user_email,
+            'first_name'   => $user_obj->first_name,
+            'last_name'    => $user_obj->last_name,
+            'levels'       => $all_levels
+        )
+    ));
+}
+
+// Legacy Verification (Without OTP)
+function fitness_app_verify_user_endpoint($request) {
+    $login_id = $request->get_param('login_id');
+    $user_id = get_fitness_app_user_by_login_id($login_id);
+
+    if (!$user_id) {
+        return new WP_Error('user_not_found', 'No user found with the provided email or mobile number.', array('status' => 404));
+    }
+
+    if (!function_exists('pmpro_hasMembershipLevel')) {
+        return new WP_Error('pmpro_missing', 'Paid Memberships Pro plugin is not active on the server.', array('status' => 500));
+    }
+
+    $has_active_subscription = pmpro_hasMembershipLevel(0, $user_id);
+    $all_levels = function_exists('pmpro_getMembershipLevelsForUser') ? pmpro_getMembershipLevelsForUser($user_id) : '';
+
     if ($has_active_subscription) {
         $user_obj = get_userdata($user_id);
         return rest_ensure_response(array(
@@ -116,14 +231,6 @@ function fitness_app_verify_user_endpoint($request) {
             )
         ));
     } else {
-        return new WP_Error(
-            'forbidden',
-            'User does not have an active subscription for any required level.',
-            array(
-                'status' => 403, 
-                'debug_user_id' => $user_id,
-                'debug_levels' => $all_levels 
-            )
-        );
+        return new WP_Error('forbidden', 'User does not have an active subscription for any required level.', array('status' => 403));
     }
 }

@@ -80,7 +80,7 @@ export default function DashboardPage() {
                         <span className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Target</span>
                     </div>
                     <p className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-                        {derived.dailyCalorieTarget.toLocaleString()}
+                        {derived.recommendedDailyCalories.toLocaleString()}
                     </p>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 capitalize">
                         {goals.pace} {isLosingWeight ? 'deficit' : 'surplus'}
@@ -96,7 +96,7 @@ export default function DashboardPage() {
                         <span className="text-xs font-medium text-zinc-400 uppercase tracking-wider">Burn</span>
                     </div>
                     <p className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-                        {derived.dailyExerciseBurnTarget.toLocaleString()}
+                        {derived.exerciseBurn.toLocaleString()}
                     </p>
                     <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">active burn target</p>
                 </div>

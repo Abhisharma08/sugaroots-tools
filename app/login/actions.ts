@@ -11,7 +11,7 @@ export async function loginAction(prevState: any, formData: FormData) {
 
     try {
         // Replace this URL with your actual WordPress site URL
-        const wpUrl = process.env.NEXT_PUBLIC_WP_URL || 'https://theSugaRootss.com';
+        const wpUrl = process.env.NEXT_PUBLIC_WP_URL || 'https://thesugaroots.com';
 
         const res = await fetch(`${wpUrl}/wp-json/fitness-app/v1/verify-user`, {
             method: 'POST',

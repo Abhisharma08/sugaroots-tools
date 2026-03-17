@@ -1,12 +1,13 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Activity, Calculator, Settings, X, ListChecks } from 'lucide-react';
+import { Home, Activity, Calculator, Settings, X, ListChecks, Wind } from 'lucide-react';
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
     { name: 'Tools', href: '/dashboard/tools', icon: Activity },
     { name: 'Habits', href: '/dashboard/habits', icon: ListChecks },
+    { name: 'Stress Relief', href: '/dashboard/stress-relief', icon: Wind },
 ];
 
 interface SidebarProps {

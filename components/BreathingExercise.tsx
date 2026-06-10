@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Play, Square, Wind } from 'lucide-react';
 
-type Phase = 'Idle' | 'Inhale' | 'Hold' | 'Exhale' | 'HoldOut';
+type Phase = 'Idle' | 'Countdown' | 'Inhale' | 'Hold' | 'Exhale' | 'HoldOut';
 
 type Technique = {
     id: string;
@@ -76,7 +76,9 @@ export default function BreathingExercise() {
                         // Let the effect re-run with the new phase logic below. We use a microtask or just let state settle.
                         // Actually, it's better to handle transitions directly here based on the EXPIRED phase.
                         
-                        if (phase === 'Inhale') {
+                        if (phase === 'Countdown') {
+                            playPhase('Inhale', selectedTechnique.timings.inhale, 'Hold', 1.5);
+                        } else if (phase === 'Inhale') {
                             if (selectedTechnique.timings.hold > 0) {
                                 playPhase('Hold', selectedTechnique.timings.hold, 'Exhale', 1.5);
                             } else {
@@ -108,9 +110,9 @@ export default function BreathingExercise() {
     // Initial kick-off
     useEffect(() => {
         if (isActive && phase === 'Idle') {
-            playPhase('Inhale', selectedTechnique.timings.inhale, 'Hold', 1.5);
+            playPhase('Countdown', 3, 'Inhale', 1);
         }
-    }, [isActive, phase, selectedTechnique, playPhase]);
+    }, [isActive, phase, playPhase]);
 
 
 
@@ -118,6 +120,7 @@ export default function BreathingExercise() {
     const getInstructionText = () => {
         switch (phase) {
             case 'Idle': return 'Ready to breathe?';
+            case 'Countdown': return 'Get Ready...';
             case 'Inhale': return 'Breathe In';
             case 'Hold': return 'Hold Breath';
             case 'Exhale': return 'Breathe Out';
@@ -129,6 +132,7 @@ export default function BreathingExercise() {
     const getCircleColor = () => {
         switch (phase) {
             case 'Idle': return 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-500';
+            case 'Countdown': return 'bg-amber-100 dark:bg-amber-900/40 text-amber-500';
             case 'Inhale': return 'bg-teal-100 dark:bg-teal-900/40 text-teal-600';
             case 'Hold': return 'bg-purple-100 dark:bg-purple-900/40 text-purple-600';
             case 'Exhale': return 'bg-blue-100 dark:bg-blue-900/40 text-blue-600';
@@ -139,7 +143,7 @@ export default function BreathingExercise() {
 
     // Calculate transition duration dynamically so it exactly matches the phase timing
     const getTransitionDuration = () => {
-        if (phase === 'Idle' || phase === 'Hold' || phase === 'HoldOut') {
+        if (phase === 'Idle' || phase === 'Countdown' || phase === 'Hold' || phase === 'HoldOut') {
              // For holds, we want it to stay the absolute same size immediately, so no CSS transition needed, 
              // but keeping a slight easing makes it feel softer if it arrives slightly offset.
              return '1000ms'; 

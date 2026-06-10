@@ -23,14 +23,19 @@ export default function HabitTracker() {
     const [newTitle, setNewTitle] = useState('');
     const [newCategory, setNewCategory] = useState('');
 
+    // Create new category state
+    const [localCategories, setLocalCategories] = useState<string[]>([]);
+    const [isAddingCategory, setIsAddingCategory] = useState(false);
+    const [newCategoryName, setNewCategoryName] = useState('');
+
     // Compute dynamic categories based on existing habits
     const dynamicCategories = useMemo(() => {
-        const uniqueCats = new Set<string>();
+        const uniqueCats = new Set<string>(localCategories);
         habits.forEach(h => {
             if (h.category) uniqueCats.add(h.category);
         });
         return ['All', ...Array.from(uniqueCats).sort()];
-    }, [habits]);
+    }, [habits, localCategories]);
 
     useEffect(() => {
         if (userInfo?.uid) {
@@ -79,6 +84,17 @@ export default function HabitTracker() {
         setIsAdding(false);
     };
 
+    const handleAddCategory = (e: React.FormEvent) => {
+        e.preventDefault();
+        const cat = newCategoryName.trim();
+        if (cat && !dynamicCategories.includes(cat)) {
+            setLocalCategories(prev => [...prev, cat]);
+            setSelectedCategory(cat);
+        }
+        setNewCategoryName('');
+        setIsAddingCategory(false);
+    };
+
     if (isLoading && habits.length === 0) {
         return (
             <div className="flex justify-center py-12">
@@ -106,26 +122,51 @@ export default function HabitTracker() {
                 </div>
             </div>
 
-            {/* FILTER CHIPS */}
-            <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide">
-                {dynamicCategories.map((catName) => {
-                    const Icon = CATEGORY_ICONS[catName] || Hash;
-                    return (
+                {/* FILTER CHIPS */}
+                <div className="flex gap-2 overflow-x-auto pb-4 scrollbar-hide">
+                    {dynamicCategories.map((catName) => {
+                        const Icon = CATEGORY_ICONS[catName] || Hash;
+                        return (
+                            <button
+                                key={catName}
+                                onClick={() => setSelectedCategory(catName)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-full border whitespace-nowrap transition-colors text-sm font-medium ${
+                                    selectedCategory === catName 
+                                    ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100' 
+                                    : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'
+                                }`}
+                            >
+                                {selectedCategory === catName && <Icon className="w-4 h-4" />}
+                                {catName}
+                            </button>
+                        );
+                    })}
+                    {isAddingCategory ? (
+                        <form onSubmit={handleAddCategory} className="flex items-center gap-2">
+                            <input
+                                type="text"
+                                value={newCategoryName}
+                                onChange={(e) => setNewCategoryName(e.target.value)}
+                                placeholder="New Category"
+                                className="px-3 py-1.5 bg-zinc-50 border border-zinc-200 rounded-full text-sm outline-none focus:border-zinc-400 dark:bg-zinc-900 dark:border-zinc-800"
+                                autoFocus
+                            />
+                            <button type="submit" className="text-xs font-semibold text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200">
+                                Save
+                            </button>
+                            <button type="button" onClick={() => setIsAddingCategory(false)} className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
+                                Cancel
+                            </button>
+                        </form>
+                    ) : (
                         <button
-                            key={catName}
-                            onClick={() => setSelectedCategory(catName)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-full border whitespace-nowrap transition-colors text-sm font-medium ${
-                                selectedCategory === catName 
-                                ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-300 dark:border-zinc-700 text-zinc-900 dark:text-zinc-100' 
-                                : 'bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700'
-                            }`}
+                            onClick={() => setIsAddingCategory(true)}
+                            className="flex items-center gap-1 px-4 py-2 rounded-full border border-dashed border-zinc-300 dark:border-zinc-700 text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 transition-colors text-sm font-medium whitespace-nowrap"
                         >
-                            {selectedCategory === catName && <Icon className="w-4 h-4" />}
-                            {catName}
+                            <Plus className="w-4 h-4" /> Category
                         </button>
-                    );
-                })}
-            </div>
+                    )}
+                </div>
 
             {/* QUICK ADD INLINE ROW (Optional expanded state) */}
             {isAdding && (
@@ -193,7 +234,12 @@ export default function HabitTracker() {
                         <div className="flex items-center">
                             <div className="w-40 shrink-0">
                                 <button 
-                                    onClick={() => setIsAdding(!isAdding)}
+                                    onClick={() => {
+                                        setIsAdding(!isAdding);
+                                        if (!isAdding && selectedCategory !== 'All') {
+                                            setNewCategory(selectedCategory);
+                                        }
+                                    }}
                                     className="bg-yellow-400 text-yellow-950 font-bold px-4 py-2 rounded-xl text-sm flex items-center gap-1.5 shadow-sm hover:bg-yellow-500 transition-colors w-full"
                                 >
                                     Habits <Plus className="w-4 h-4 ml-auto" />

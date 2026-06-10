@@ -15,9 +15,14 @@ import LifestyleTab from '@/components/health-tracker/LifestyleTab';
 const TABS = ['Summary', 'Vitals', 'Glucose', 'Food Log', 'Workout', 'Lifestyle'];
 
 export default function HealthTrackerPage() {
+  const [mounted, setMounted] = useState(false);
   const { currentDate, setCurrentDate } = useHealthTrackerStore();
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const [showSaveToast, setShowSaveToast] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // We rely on Zustand's persist middleware for auto-saving, 
   // but we add a manual save button for UX reassurance as requested.
@@ -35,6 +40,14 @@ export default function HealthTrackerPage() {
     const next = addDays(new Date(currentDate), 1);
     setCurrentDate(format(next, 'yyyy-MM-dd'));
   };
+
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center min-h-[50vh]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto pb-24 font-sans relative">

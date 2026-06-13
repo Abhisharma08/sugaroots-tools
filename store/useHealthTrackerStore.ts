@@ -73,6 +73,17 @@ interface HealthTrackerState {
   removeWorkoutEntry: (id: string) => void;
 }
 
+const emptyLogsCache: Record<string, DailyLog> = {};
+
+export const getCachedEmptyLog = (date: string): DailyLog => {
+  if (!emptyLogsCache[date]) {
+    emptyLogsCache[date] = createEmptyLog(date);
+  }
+  return emptyLogsCache[date];
+};
+
+const mergedLogCache = new WeakMap<object, DailyLog>();
+
 export const useHealthTrackerStore = create<HealthTrackerState>()(
   persist(
     (set, get) => ({
@@ -84,15 +95,31 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
       
       getLog: (date) => {
         const existing = get().logs[date];
-        if (!existing) return createEmptyLog(date);
-        return {
-          ...createEmptyLog(date),
+        if (!existing) return getCachedEmptyLog(date);
+        
+        // Fast path: if the log has all required nested objects, return it directly.
+        if (existing.sleep && existing.glucose && existing.food && existing.workouts) {
+          return existing;
+        }
+
+        // If it's missing fields (e.g. from older persisted state), merge it.
+        // Cache the merged result using WeakMap to ensure stable references.
+        if (mergedLogCache.has(existing)) {
+          return mergedLogCache.get(existing)!;
+        }
+
+        const emptyLog = getCachedEmptyLog(date);
+        const merged: DailyLog = {
+          ...emptyLog,
           ...existing,
-          sleep: { ...createEmptyLog(date).sleep, ...(existing.sleep || {}) },
-          glucose: { ...createEmptyLog(date).glucose, ...(existing.glucose || {}) },
+          sleep: { ...emptyLog.sleep, ...(existing.sleep || {}) },
+          glucose: { ...emptyLog.glucose, ...(existing.glucose || {}) },
           food: existing.food || [],
           workouts: existing.workouts || [],
         };
+        
+        mergedLogCache.set(existing, merged);
+        return merged;
       },
       
       updateLog: (date, partial) => set((state) => {

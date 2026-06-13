@@ -49,17 +49,17 @@ export default function WorkoutTab() {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
       
       {/* Overview Card */}
-      <div className="bg-indigo-600 text-white rounded-3xl p-6 shadow-md relative overflow-hidden">
+      <div className="bg-blue-600 text-white rounded-3xl p-6 shadow-md relative overflow-hidden">
         <div className="absolute right-0 top-0 opacity-10">
           <Dumbbell className="w-48 h-48 -mr-10 -mt-10" />
         </div>
         <div className="relative z-10 flex justify-between items-end">
           <div>
-            <p className="text-indigo-200 font-medium mb-1">Total Workout Burn</p>
-            <p className="text-5xl font-bold">{metrics.workoutCalories} <span className="text-2xl font-medium text-indigo-200">kcal</span></p>
+            <p className="text-blue-200 font-medium mb-1">Total Workout Burn</p>
+            <p className="text-5xl font-bold">{metrics.workoutCalories} <span className="text-2xl font-medium text-blue-200">kcal</span></p>
           </div>
           <div className="text-right">
-            <p className="text-indigo-200 text-sm mb-1">Total Sessions</p>
+            <p className="text-blue-200 text-sm mb-1">Total Sessions</p>
             <p className="text-2xl font-bold">{log.workouts.length}</p>
           </div>
         </div>
@@ -70,14 +70,14 @@ export default function WorkoutTab() {
         {/* Header */}
         <div className="px-6 py-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/50">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl">
-              <Activity className="w-5 h-5 text-indigo-600" />
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+              <Activity className="w-5 h-5 text-blue-600" />
             </div>
             <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100">Daily Workouts</h3>
           </div>
           <button 
             onClick={() => setIsAdding(!isAdding)}
-            className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-xl transition-colors shadow-sm"
           >
             <Plus className="w-4 h-4" /> Add Workout
           </button>
@@ -85,14 +85,14 @@ export default function WorkoutTab() {
 
         {/* Add Form */}
         {isAdding && (
-          <form onSubmit={handleSubmit} className="p-6 border-b border-zinc-200 dark:border-zinc-800 bg-indigo-50/50 dark:bg-indigo-900/10">
+          <form onSubmit={handleSubmit} className="p-6 border-b border-zinc-200 dark:border-zinc-800 bg-blue-50/50 dark:bg-blue-900/10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block text-xs font-semibold text-zinc-600 mb-1">Exercise Type</label>
                 <select 
                   value={formData.exerciseIndex} 
                   onChange={e => setFormData({...formData, exerciseIndex: parseInt(e.target.value)})} 
-                  className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-indigo-500"
+                  className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-blue-500"
                 >
                   {EXERCISES.map((ex, idx) => (
                     <option key={ex.name} value={idx}>{ex.name} (MET: {ex.met})</option>
@@ -106,7 +106,7 @@ export default function WorkoutTab() {
                   required 
                   value={formData.durationMinutes} 
                   onChange={e => setFormData({...formData, durationMinutes: e.target.value})} 
-                  className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-indigo-500" 
+                  className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-blue-500" 
                   placeholder="e.g. 45" 
                 />
               </div>
@@ -114,7 +114,7 @@ export default function WorkoutTab() {
             
             {/* Live Preview of Calculation */}
             {formData.durationMinutes && !isNaN(parseInt(formData.durationMinutes)) && (
-              <div className="mb-4 text-sm text-indigo-700 dark:text-indigo-400 bg-indigo-100 dark:bg-indigo-900/30 px-3 py-2 rounded-lg flex items-center justify-between">
+              <div className="mb-4 text-sm text-blue-700 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 px-3 py-2 rounded-lg flex items-center justify-between">
                 <span>Est. Burn: <strong>{Math.round(EXERCISES[formData.exerciseIndex].met * currentWeight * (parseInt(formData.durationMinutes) / 60))} kcal</strong></span>
                 <span className="text-xs opacity-75">Calculation: {EXERCISES[formData.exerciseIndex].met} MET × {currentWeight} kg × {(parseInt(formData.durationMinutes) / 60).toFixed(2)} hrs</span>
               </div>
@@ -122,7 +122,7 @@ export default function WorkoutTab() {
 
             <div className="flex justify-end gap-2">
               <button type="button" onClick={() => setIsAdding(false)} className="px-4 py-2 text-sm text-zinc-500 font-medium hover:text-zinc-800">Cancel</button>
-              <button type="submit" className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700">Save Workout</button>
+              <button type="submit" className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700">Save Workout</button>
             </div>
           </form>
         )}
@@ -150,7 +150,7 @@ export default function WorkoutTab() {
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <span className="text-xl font-bold text-indigo-600 dark:text-indigo-400">{estCals}</span>
+                        <span className="text-xl font-bold text-blue-600 dark:text-blue-400">{estCals}</span>
                         <span className="text-sm font-medium text-zinc-400 ml-1">kcal</span>
                       </div>
                       <button 

@@ -46,8 +46,8 @@ export default function DashboardPage() {
                 {/* BMR */}
                 <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between mb-3">
-                        <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl">
-                            <Activity className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                        <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+                            <Activity className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                         </div>
                         <span className="text-xs font-medium text-zinc-400 uppercase tracking-wider">BMR</span>
                     </div>
@@ -60,8 +60,8 @@ export default function DashboardPage() {
                 {/* TDEE */}
                 <div className="bg-white dark:bg-zinc-900 rounded-2xl p-5 border border-zinc-200 dark:border-zinc-800 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between mb-3">
-                        <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-xl">
-                            <TrendingUp className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                        <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-xl">
+                            <TrendingUp className="w-5 h-5 text-green-600 dark:text-green-400" />
                         </div>
                         <span className="text-xs font-medium text-zinc-400 uppercase tracking-wider">TDEE</span>
                     </div>
@@ -155,7 +155,7 @@ export default function DashboardPage() {
                 {/* Profile Summary */}
                 <div className="lg:col-span-2 bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm">
                     <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-5 flex items-center gap-2">
-                        <Dumbbell className="w-5 h-5 text-indigo-500" />
+                        <Dumbbell className="w-5 h-5 text-blue-500" />
                         Your Profile
                     </h3>
                     <div className="space-y-4">
@@ -194,7 +194,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Quick Actions */}
-            <div className="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 shadow-lg relative overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-500 to-green-600 rounded-2xl p-6 shadow-lg relative overflow-hidden">
                 <div className="absolute top-0 right-0 -mt-12 -mr-12 w-56 h-56 bg-white/10 rounded-full blur-3xl pointer-events-none" />
                 <div className="absolute bottom-0 left-0 -mb-8 -ml-8 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none" />
 
@@ -203,13 +203,13 @@ export default function DashboardPage() {
                         <h3 className="text-xl font-bold text-white mb-1">
                             Ready to update your stats?
                         </h3>
-                        <p className="text-indigo-100 text-sm">
+                        <p className="text-blue-100 text-sm">
                             Use the fitness tools to recalculate your BMR, TDEE, and plan your goals.
                         </p>
                     </div>
                     <Link
                         href="/dashboard/tools"
-                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-indigo-600 font-semibold rounded-xl shadow-md hover:shadow-lg hover:bg-indigo-50 transition-all group whitespace-nowrap"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-blue-600 font-semibold rounded-xl shadow-md hover:shadow-lg hover:bg-blue-50 transition-all group whitespace-nowrap"
                     >
                         <Calculator className="w-4 h-4" />
                         Open Tools

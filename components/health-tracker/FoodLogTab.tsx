@@ -74,14 +74,14 @@ export default function FoodLogTab() {
         {/* Header */}
         <div className="px-6 py-5 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/50">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl">
-              <Utensils className="w-5 h-5 text-indigo-600" />
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+              <Utensils className="w-5 h-5 text-blue-600" />
             </div>
             <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100">Daily Log</h3>
           </div>
           <button 
             onClick={() => setIsAdding(!isAdding)}
-            className="flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm rounded-xl transition-colors shadow-sm"
+            className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm rounded-xl transition-colors shadow-sm"
           >
             <Plus className="w-4 h-4" /> Add Food
           </button>
@@ -89,15 +89,15 @@ export default function FoodLogTab() {
 
         {/* Add Form */}
         {isAdding && (
-          <form onSubmit={handleSubmit} className="p-6 border-b border-zinc-200 dark:border-zinc-800 bg-indigo-50/50 dark:bg-indigo-900/10">
+          <form onSubmit={handleSubmit} className="p-6 border-b border-zinc-200 dark:border-zinc-800 bg-blue-50/50 dark:bg-blue-900/10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
                 <label className="block text-xs font-semibold text-zinc-600 mb-1">Food Name *</label>
-                <input type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-indigo-500" placeholder="e.g. Oatmeal" />
+                <input type="text" required value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-blue-500" placeholder="e.g. Oatmeal" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-zinc-600 mb-1">Category</label>
-                <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-indigo-500">
+                <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-blue-500">
                   {MEAL_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
@@ -105,28 +105,28 @@ export default function FoodLogTab() {
             <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
               <div>
                 <label className="block text-xs font-semibold text-zinc-600 mb-1">Quantity</label>
-                <input type="text" value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-indigo-500" placeholder="1 bowl" />
+                <input type="text" value={formData.quantity} onChange={e => setFormData({...formData, quantity: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-blue-500" placeholder="1 bowl" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-zinc-600 mb-1">Calories *</label>
-                <input type="number" required value={formData.calories} onChange={e => setFormData({...formData, calories: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-indigo-500" placeholder="kcal" />
+                <input type="number" required value={formData.calories} onChange={e => setFormData({...formData, calories: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-blue-500" placeholder="kcal" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-zinc-600 mb-1">Protein (g)</label>
-                <input type="number" value={formData.protein} onChange={e => setFormData({...formData, protein: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-indigo-500" />
+                <input type="number" value={formData.protein} onChange={e => setFormData({...formData, protein: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-blue-500" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-zinc-600 mb-1">Carbs (g)</label>
-                <input type="number" value={formData.carbs} onChange={e => setFormData({...formData, carbs: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-indigo-500" />
+                <input type="number" value={formData.carbs} onChange={e => setFormData({...formData, carbs: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-blue-500" />
               </div>
               <div>
                 <label className="block text-xs font-semibold text-zinc-600 mb-1">Fat (g)</label>
-                <input type="number" value={formData.fat} onChange={e => setFormData({...formData, fat: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-indigo-500" />
+                <input type="number" value={formData.fat} onChange={e => setFormData({...formData, fat: e.target.value})} className="w-full px-3 py-2 bg-white dark:bg-zinc-950 border rounded-lg text-sm outline-none focus:border-blue-500" />
               </div>
             </div>
             <div className="flex justify-end gap-2">
               <button type="button" onClick={() => setIsAdding(false)} className="px-4 py-2 text-sm text-zinc-500 font-medium hover:text-zinc-800">Cancel</button>
-              <button type="submit" className="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700">Save Entry</button>
+              <button type="submit" className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700">Save Entry</button>
             </div>
           </form>
         )}
@@ -144,7 +144,7 @@ export default function FoodLogTab() {
                 <div key={entry.id} className="p-4 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-semibold text-indigo-600 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-0.5 rounded uppercase tracking-wider">{entry.category}</span>
+                      <span className="text-xs font-semibold text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded uppercase tracking-wider">{entry.category}</span>
                       <span className="font-semibold text-zinc-900 dark:text-zinc-100">{entry.name}</span>
                     </div>
                     <div className="text-sm text-zinc-500 flex gap-3">

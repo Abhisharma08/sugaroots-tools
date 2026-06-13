@@ -31,7 +31,7 @@ type BMRFormValues = z.infer<typeof bmrSchema>;
 function inputCls(hasError: boolean) {
     return `w-full px-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 border rounded-xl transition-all outline-none text-zinc-900 dark:text-zinc-100 ${hasError
         ? 'border-red-400 dark:border-red-500 focus:ring-2 focus:ring-red-400 focus:border-red-400'
-        : 'border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500'
+        : 'border-zinc-200 dark:border-zinc-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500'
         }`;
 }
 
@@ -84,8 +84,8 @@ export default function BMRCalculator() {
                 {/* Form Section */}
                 <div className="p-8 lg:p-10">
                     <div className="flex items-center space-x-3 mb-8">
-                        <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl">
-                            <Activity className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                        <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+                            <Activity className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div>
                             <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 font-sans tracking-tight">
@@ -245,20 +245,20 @@ export default function BMRCalculator() {
                 </div>
 
                 {/* Results Section */}
-                <div className={`bg-gradient-to-br from-indigo-500 to-purple-600 p-8 lg:p-10 flex flex-col justify-center relative overflow-hidden text-white transition-opacity duration-300 ${hasErrors ? 'opacity-50' : ''}`}>
+                <div className={`bg-gradient-to-br from-blue-500 to-green-600 p-8 lg:p-10 flex flex-col justify-center relative overflow-hidden text-white transition-opacity duration-300 ${hasErrors ? 'opacity-50' : ''}`}>
                     <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-white/10 rounded-full blur-3xl mix-blend-overlay pointer-events-none" />
                     <div className="absolute bottom-0 left-0 -mb-16 -ml-16 w-48 h-48 bg-white/10 rounded-full blur-2xl mix-blend-overlay pointer-events-none" />
 
                     <div className="relative z-10 space-y-8">
                         <div>
-                            <p className="text-indigo-100 font-medium text-sm tracking-wider uppercase mb-2">
+                            <p className="text-blue-100 font-medium text-sm tracking-wider uppercase mb-2">
                                 Basal Metabolic Rate
                             </p>
                             <div className="flex items-baseline space-x-2">
                                 <span className="text-5xl font-bold tracking-tight">{derived.bmr.toLocaleString()}</span>
-                                <span className="text-indigo-200 font-medium">kcal/day</span>
+                                <span className="text-blue-200 font-medium">kcal/day</span>
                             </div>
-                            <p className="text-indigo-100 text-sm mt-3 opacity-90 leading-relaxed max-w-sm">
+                            <p className="text-blue-100 text-sm mt-3 opacity-90 leading-relaxed max-w-sm">
                                 The minimum calories required to keep your body functioning at rest.
                             </p>
                         </div>
@@ -266,14 +266,14 @@ export default function BMRCalculator() {
                         <div className="h-px bg-white/20 w-full rounded" />
 
                         <div>
-                            <p className="text-purple-100 font-medium text-sm tracking-wider uppercase mb-2">
+                            <p className="text-green-100 font-medium text-sm tracking-wider uppercase mb-2">
                                 Total Daily Energy Expenditure
                             </p>
                             <div className="flex items-baseline space-x-2">
                                 <span className="text-5xl font-bold tracking-tight">{derived.tdee.toLocaleString()}</span>
-                                <span className="text-purple-200 font-medium">kcal/day</span>
+                                <span className="text-green-200 font-medium">kcal/day</span>
                             </div>
-                            <p className="text-purple-100 text-sm mt-3 opacity-90 leading-relaxed max-w-sm">
+                            <p className="text-green-100 text-sm mt-3 opacity-90 leading-relaxed max-w-sm">
                                 Your maintenance calories, including your daily activity and exercise levels.
                             </p>
                         </div>

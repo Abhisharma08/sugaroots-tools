@@ -31,7 +31,7 @@ export default function Header({ onMenuClick }: { onMenuClick: () => void }) {
         <header className="sticky top-0 z-10 flex flex-shrink-0 h-16 bg-white dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800 shadow-sm">
             <button
                 type="button"
-                className="px-4 text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 lg:hidden"
+                className="px-4 text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 lg:hidden"
                 onClick={onMenuClick}
             >
                 <span className="sr-only">Open sidebar</span>
@@ -60,7 +60,7 @@ export default function Header({ onMenuClick }: { onMenuClick: () => void }) {
                     </button>
                     <div className="relative">
                         <button
-                            className="flex items-center justify-center w-8 h-8 text-xs font-bold bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all hover:ring-2"
+                            className="flex items-center justify-center w-8 h-8 text-xs font-bold bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all hover:ring-2"
                             title={displayName}
                         >
                             {initials || <UserCircle className="w-5 h-5" />}

@@ -35,12 +35,14 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                     }`}
             >
                 <div className="flex items-center justify-between h-16 px-6 border-b border-zinc-200 dark:border-zinc-800">
-                    <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">
-                        SugaRoots
-                    </span>
+                    <img 
+                        src="https://thesugaroots.com/wp-content/uploads/2026/02/SugaRoots-01.png" 
+                        alt="SugaRoots" 
+                        className="h-8 w-auto object-contain dark:brightness-110" 
+                    />
                     <button
                         onClick={() => setIsOpen(false)}
-                        className="p-1 rounded-md text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 lg:hidden"
+                        className="p-1 rounded-md text-zinc-400 hover:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 lg:hidden"
                     >
                         <X className="w-6 h-6" aria-hidden="true" />
                     </button>
@@ -53,13 +55,13 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                                 key={item.name}
                                 href={item.href}
                                 className={`flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-all duration-200 ${isActive
-                                    ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400 shadow-sm'
+                                    ? 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400 shadow-sm'
                                     : 'text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100'
                                     }`}
                                 onClick={() => setIsOpen(false)} // Close on navigate on mobile
                             >
                                 <item.icon
-                                    className={`mr-3 flex-shrink-0 h-5 w-5 transition-colors duration-200 ${isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-zinc-400 group-hover:text-zinc-500 dark:group-hover:text-zinc-300'
+                                    className={`mr-3 flex-shrink-0 h-5 w-5 transition-colors duration-200 ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-400 group-hover:text-zinc-500 dark:group-hover:text-zinc-300'
                                         }`}
                                     aria-hidden="true"
                                 />

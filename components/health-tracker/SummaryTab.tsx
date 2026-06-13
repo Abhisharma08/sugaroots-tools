@@ -79,7 +79,7 @@ export default function SummaryTab() {
             <div className="flex items-center justify-center text-zinc-300 font-bold text-2xl">-</div>
             <div className="bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl p-4 border border-zinc-100 dark:border-zinc-800">
               <span className="text-xs font-semibold text-zinc-500 block mb-1">Burned (Steps + Wkt)</span>
-              <span className="text-xl font-bold text-indigo-600">{metrics.totalBurned}</span>
+              <span className="text-xl font-bold text-blue-600">{metrics.totalBurned}</span>
             </div>
           </div>
         </div>
@@ -99,7 +99,7 @@ export default function SummaryTab() {
           <span className="text-xs text-zinc-500 font-medium">Glasses Water</span>
         </div>
         <div className="bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm flex flex-col items-center justify-center text-center">
-          <Moon className="w-6 h-6 text-indigo-500 mb-2" />
+          <Moon className="w-6 h-6 text-blue-500 mb-2" />
           <span className="text-xl font-bold text-zinc-900 dark:text-zinc-100">{log.sleep.durationHours.toFixed(1)}</span>
           <span className="text-xs text-zinc-500 font-medium">Hours Sleep</span>
         </div>
@@ -122,7 +122,7 @@ export default function SummaryTab() {
           value={log.notes}
           onChange={(e) => updateLifestyle({ notes: e.target.value })}
           placeholder="How are you feeling today? Any symptoms or general notes?"
-          className="w-full h-32 p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl resize-none outline-none focus:border-indigo-500 transition-colors"
+          className="w-full h-32 p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl resize-none outline-none focus:border-blue-500 transition-colors"
         />
       </div>
 

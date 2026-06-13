@@ -44,7 +44,7 @@ export default function HealthTrackerPage() {
   if (!mounted) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
@@ -54,7 +54,7 @@ export default function HealthTrackerPage() {
       
       {/* Header & Date Picker */}
       <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-indigo-600 dark:text-indigo-400 mb-6">Sugar Roots Health Tracker</h1>
+        <h1 className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-6">Sugar Roots Health Tracker</h1>
         
         <div className="flex items-center justify-between bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
           <button onClick={handlePrevDay} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">
@@ -86,7 +86,7 @@ export default function HealthTrackerPage() {
               onClick={() => setActiveTab(tab)}
               className={`px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all shadow-sm ${
                 activeTab === tab 
-                ? 'bg-indigo-600 text-white border-transparent' 
+                ? 'bg-blue-600 text-white border-transparent' 
                 : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800'
               }`}
             >
@@ -116,7 +116,7 @@ export default function HealthTrackerPage() {
         )}
         <button
           onClick={handleSave}
-          className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-2xl shadow-xl shadow-indigo-600/30 font-bold transition-all hover:scale-105 active:scale-95"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-2xl shadow-xl shadow-blue-600/30 font-bold transition-all hover:scale-105 active:scale-95"
         >
           <Save className="w-5 h-5" />
           Save Day

@@ -156,7 +156,7 @@ export default function LoginPage() {
                                         autoComplete="username"
                                         required
                                         placeholder="john@example.com or +1 555-0000"
-                                        className="block w-full pl-10 px-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-all outline-none sm:text-sm"
+                                        className="block w-full pl-10 px-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-zinc-900 dark:text-zinc-100 transition-all outline-none sm:text-sm"
                                         disabled={isPending}
                                     />
                                 </div>
@@ -166,7 +166,7 @@ export default function LoginPage() {
                                 <button
                                     type="submit"
                                     disabled={isPending}
-                                    className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed group"
+                                    className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors disabled:opacity-70 disabled:cursor-not-allowed group"
                                 >
                                     {isPending ? (
                                         <>
@@ -201,7 +201,7 @@ export default function LoginPage() {
                                         maxLength={6}
                                         required
                                         placeholder="000000"
-                                        className="block w-full px-4 py-3 text-center tracking-[0.5em] text-xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-zinc-900 dark:text-zinc-100 transition-all outline-none"
+                                        className="block w-full px-4 py-3 text-center tracking-[0.5em] text-xl bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-zinc-900 dark:text-zinc-100 transition-all outline-none"
                                         disabled={isPending}
                                     />
                                 </div>
@@ -235,7 +235,7 @@ export default function LoginPage() {
                                         setError(null);
                                     }}
                                     disabled={isPending}
-                                    className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium disabled:opacity-50"
+                                    className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 font-medium disabled:opacity-50"
                                 >
                                     Go back
                                 </button>

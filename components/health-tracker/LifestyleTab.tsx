@@ -98,8 +98,8 @@ export default function LifestyleTab() {
         <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl">
-                <Moon className="w-6 h-6 text-indigo-600" />
+              <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
+                <Moon className="w-6 h-6 text-blue-600" />
               </div>
               <div>
                 <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100">Sleep Quality</h3>
@@ -107,7 +107,7 @@ export default function LifestyleTab() {
               </div>
             </div>
             <div className="text-right">
-              <span className="text-3xl font-bold text-indigo-600">{sleep.durationHours.toFixed(1)}</span>
+              <span className="text-3xl font-bold text-blue-600">{sleep.durationHours.toFixed(1)}</span>
               <span className="text-zinc-400 font-medium ml-1">hrs</span>
             </div>
           </div>
@@ -140,13 +140,13 @@ export default function LifestyleTab() {
           <div>
             <div className="flex justify-between text-xs font-semibold mb-2">
               <span className="text-zinc-500">Progress to 7 Hours</span>
-              <span className={sleep.durationHours >= 7 ? "text-emerald-600" : "text-indigo-600"}>
+              <span className={sleep.durationHours >= 7 ? "text-emerald-600" : "text-blue-600"}>
                 {Math.round(sleepGoalProgress)}%
               </span>
             </div>
             <div className="h-3 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
               <div 
-                className={`h-full transition-all duration-500 ${sleep.durationHours >= 7 ? 'bg-emerald-500' : 'bg-indigo-500'}`}
+                className={`h-full transition-all duration-500 ${sleep.durationHours >= 7 ? 'bg-emerald-500' : 'bg-blue-500'}`}
                 style={{ width: `${sleepGoalProgress}%` }}
               />
             </div>

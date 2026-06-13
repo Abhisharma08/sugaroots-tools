@@ -18,7 +18,7 @@ export default function VitalsTab() {
         <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600">
+              <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
                 <Scale className="w-5 h-5" />
               </div>
               <h3 className="font-semibold text-lg text-zinc-900 dark:text-zinc-100">Body Weight</h3>
@@ -31,7 +31,7 @@ export default function VitalsTab() {
               value={log.weight || ''}
               onChange={(e) => updateVitals({ weight: parseFloat(e.target.value) || 0 })}
               placeholder="Enter weight"
-              className="w-full text-4xl font-bold bg-transparent border-b-2 border-zinc-200 dark:border-zinc-800 focus:border-indigo-500 outline-none pb-2 transition-colors placeholder:text-zinc-300 dark:placeholder:text-zinc-700"
+              className="w-full text-4xl font-bold bg-transparent border-b-2 border-zinc-200 dark:border-zinc-800 focus:border-blue-500 outline-none pb-2 transition-colors placeholder:text-zinc-300 dark:placeholder:text-zinc-700"
             />
             <span className="absolute right-0 bottom-4 text-zinc-400 font-medium">kg</span>
           </div>

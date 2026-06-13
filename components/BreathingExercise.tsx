@@ -131,13 +131,13 @@ export default function BreathingExercise() {
 
     const getCircleColor = () => {
         switch (phase) {
-            case 'Idle': return 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-500';
+            case 'Idle': return 'bg-blue-100 dark:bg-blue-900/40 text-blue-500';
             case 'Countdown': return 'bg-amber-100 dark:bg-amber-900/40 text-amber-500';
             case 'Inhale': return 'bg-teal-100 dark:bg-teal-900/40 text-teal-600';
-            case 'Hold': return 'bg-purple-100 dark:bg-purple-900/40 text-purple-600';
+            case 'Hold': return 'bg-green-100 dark:bg-green-900/40 text-green-600';
             case 'Exhale': return 'bg-blue-100 dark:bg-blue-900/40 text-blue-600';
             case 'HoldOut': return 'bg-zinc-200 dark:bg-zinc-800 text-zinc-600';
-            default: return 'bg-indigo-100 dark:bg-indigo-900/40 text-indigo-500';
+            default: return 'bg-blue-100 dark:bg-blue-900/40 text-blue-500';
         }
     };
 

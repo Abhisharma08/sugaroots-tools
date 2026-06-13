@@ -80,10 +80,21 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
       
       setCurrentDate: (date) => set({ currentDate: date }),
       
-      getLog: (date) => get().logs[date] || createEmptyLog(date),
+      getLog: (date) => {
+        const existing = get().logs[date];
+        if (!existing) return createEmptyLog(date);
+        return {
+          ...createEmptyLog(date),
+          ...existing,
+          sleep: { ...createEmptyLog(date).sleep, ...(existing.sleep || {}) },
+          glucose: { ...createEmptyLog(date).glucose, ...(existing.glucose || {}) },
+          food: existing.food || [],
+          workouts: existing.workouts || [],
+        };
+      },
       
       updateLog: (date, partial) => set((state) => {
-        const log = state.logs[date] || createEmptyLog(date);
+        const log = state.getLog ? state.getLog(date) : (state.logs[date] || createEmptyLog(date));
         return {
           logs: {
             ...state.logs,
@@ -117,7 +128,7 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
       addFoodEntry: (entry) => {
         const date = get().currentDate;
         const log = get().getLog(date);
-        const newEntry: FoodEntry = { ...entry, id: crypto.randomUUID() };
+        const newEntry: FoodEntry = { ...entry, id: Math.random().toString(36).substr(2, 9) };
         get().updateLog(date, { food: [...log.food, newEntry] });
       },
       
@@ -130,7 +141,7 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
       addWorkoutEntry: (entry) => {
         const date = get().currentDate;
         const log = get().getLog(date);
-        const newEntry: WorkoutEntry = { ...entry, id: crypto.randomUUID() };
+        const newEntry: WorkoutEntry = { ...entry, id: Math.random().toString(36).substr(2, 9) };
         get().updateLog(date, { workouts: [...log.workouts, newEntry] });
       },
       
@@ -150,32 +161,36 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
 export const selectCurrentLog = (state: HealthTrackerState) => state.getLog(state.currentDate);
 
 export const selectCalculatedMetrics = (log: DailyLog) => {
-  const stepCalories = log.steps * 0.04;
+  const stepCalories = (log?.steps || 0) * 0.04;
   
   const defaultWeight = 80;
-  const weight = log.weight || defaultWeight;
+  const weight = log?.weight || defaultWeight;
   
-  const workoutCalories = log.workouts.reduce((acc, w) => {
+  const workouts = log?.workouts || [];
+  const workoutCalories = workouts.reduce((acc, w) => {
     return acc + (w.met * weight * w.durationHours);
   }, 0);
   
-  const foodCalories = log.food.reduce((acc, f) => acc + f.calories, 0);
-  const foodCarbs = log.food.reduce((acc, f) => acc + f.carbs, 0);
-  const foodProtein = log.food.reduce((acc, f) => acc + f.protein, 0);
-  const foodFat = log.food.reduce((acc, f) => acc + f.fat, 0);
+  const foods = log?.food || [];
+  const foodCalories = foods.reduce((acc, f) => acc + f.calories, 0);
+  const foodCarbs = foods.reduce((acc, f) => acc + f.carbs, 0);
+  const foodProtein = foods.reduce((acc, f) => acc + f.protein, 0);
+  const foodFat = foods.reduce((acc, f) => acc + f.fat, 0);
   
   const netCalories = foodCalories - (stepCalories + workoutCalories);
   
   // Health score calculation (simple 0-6 logic)
   let healthScore = 0;
-  if (log.steps >= 7000) healthScore++;
-  if (log.water >= 8) healthScore++;
-  if (log.sleep.durationHours >= 7 && log.sleep.durationHours <= 9) healthScore++;
-  if (log.workouts.length > 0) healthScore++;
+  if ((log?.steps || 0) >= 7000) healthScore++;
+  if ((log?.water || 0) >= 8) healthScore++;
+  
+  const sleepHours = log?.sleep?.durationHours || 0;
+  if (sleepHours >= 7 && sleepHours <= 9) healthScore++;
+  if (workouts.length > 0) healthScore++;
   if (netCalories <= -300) healthScore++; // Assuming weight loss goal, or adjust logic
   
   // Try parsing glucose string to check if it's within target
-  const pmGlucose = parseInt(log.glucose.postMeal);
+  const pmGlucose = parseInt(log?.glucose?.postMeal || '');
   if (!isNaN(pmGlucose) && pmGlucose < 140) healthScore++;
 
   return {

@@ -10,7 +10,10 @@ export function FitnessDataHydrator({ children }: { children: React.ReactNode })
 
     useEffect(() => {
         if (user?.uid) {
-            loadFromFirestore(user.uid);
+            // Explicitly catch at call site to prevent unhandled rejection in React 19
+            loadFromFirestore(user.uid).catch((err) => {
+                console.error('FitnessDataHydrator: Failed to load data:', err);
+            });
         }
     }, [user?.uid, loadFromFirestore]);
 
@@ -18,3 +21,4 @@ export function FitnessDataHydrator({ children }: { children: React.ReactNode })
     // But returning children directly allows the UI to render while fetching
     return <>{children}</>;
 }
+

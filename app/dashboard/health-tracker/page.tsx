@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { format, subDays, addDays } from 'date-fns';
 import { ChevronLeft, ChevronRight, Save, Check } from 'lucide-react';
 import { useHealthTrackerStore } from '@/store/useHealthTrackerStore';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 import SummaryTab from '@/components/health-tracker/SummaryTab';
 import VitalsTab from '@/components/health-tracker/VitalsTab';
@@ -16,7 +17,9 @@ const TABS = ['Summary', 'Vitals', 'Glucose', 'Food Log', 'Workout', 'Lifestyle'
 
 export default function HealthTrackerPage() {
   const [mounted, setMounted] = useState(false);
-  const { currentDate, setCurrentDate } = useHealthTrackerStore();
+  const currentDate = useHealthTrackerStore((s) => s.currentDate);
+  const setCurrentDate = useHealthTrackerStore((s) => s.setCurrentDate);
+  const hydrated = useHealthTrackerStore((s) => s._hydrated);
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const [showSaveToast, setShowSaveToast] = useState(false);
 
@@ -41,7 +44,8 @@ export default function HealthTrackerPage() {
     setCurrentDate(format(next, 'yyyy-MM-dd'));
   };
 
-  if (!mounted) {
+  // Wait for both React mount and Zustand persist hydration
+  if (!mounted || !hydrated) {
     return (
       <div className="flex items-center justify-center min-h-[50vh]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -98,12 +102,14 @@ export default function HealthTrackerPage() {
 
       {/* Active Tab Content */}
       <div className="min-h-[50vh]">
-        {activeTab === 'Summary' && <SummaryTab />}
-        {activeTab === 'Vitals' && <VitalsTab />}
-        {activeTab === 'Glucose' && <GlucoseTab />}
-        {activeTab === 'Food Log' && <FoodLogTab />}
-        {activeTab === 'Workout' && <WorkoutTab />}
-        {activeTab === 'Lifestyle' && <LifestyleTab />}
+        <ErrorBoundary>
+          {activeTab === 'Summary' && <SummaryTab />}
+          {activeTab === 'Vitals' && <VitalsTab />}
+          {activeTab === 'Glucose' && <GlucoseTab />}
+          {activeTab === 'Food Log' && <FoodLogTab />}
+          {activeTab === 'Workout' && <WorkoutTab />}
+          {activeTab === 'Lifestyle' && <LifestyleTab />}
+        </ErrorBoundary>
       </div>
 
       {/* Floating Save Button */}
@@ -126,3 +132,4 @@ export default function HealthTrackerPage() {
     </div>
   );
 }
+

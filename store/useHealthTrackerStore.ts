@@ -56,6 +56,7 @@ export const createEmptyLog = (date: string): DailyLog => ({
 interface HealthTrackerState {
   logs: Record<string, DailyLog>; // map of date YYYY-MM-DD to DailyLog
   currentDate: string; // YYYY-MM-DD
+  _hydrated: boolean; // whether persist storage has been loaded
   setCurrentDate: (date: string) => void;
   updateLog: (date: string, partial: Partial<DailyLog>) => void;
   getLog: (date: string) => DailyLog;
@@ -77,6 +78,7 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
     (set, get) => ({
       logs: {},
       currentDate: new Date().toISOString().split('T')[0],
+      _hydrated: false,
       
       setCurrentDate: (date) => set({ currentDate: date }),
       
@@ -94,7 +96,8 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
       },
       
       updateLog: (date, partial) => set((state) => {
-        const log = state.getLog ? state.getLog(date) : (state.logs[date] || createEmptyLog(date));
+        // Use getLog from the store closure (get()) instead of state to avoid issues
+        const log = get().getLog(date);
         return {
           logs: {
             ...state.logs,
@@ -105,7 +108,6 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
       
       updateVitals: (vitals) => {
         const date = get().currentDate;
-        const log = get().getLog(date);
         get().updateLog(date, { ...vitals });
       },
       
@@ -153,6 +155,18 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
     }),
     {
       name: 'SugaRoots_health_tracker',
+      // Exclude internal flags from persistence
+      partialize: (state) => ({
+        logs: state.logs,
+        currentDate: state.currentDate,
+      }),
+      onRehydrateStorage: () => {
+        return (state) => {
+          if (state) {
+            state._hydrated = true;
+          }
+        };
+      },
     }
   )
 );

@@ -2,30 +2,31 @@
 
 import Link from 'next/link';
 import { useFitnessStore } from '@/store/useFitnessStore';
+import { useHealthTrackerStore, getCachedEmptyLog } from '@/store/useHealthTrackerStore';
 import {
     Activity,
     Target,
     TrendingUp,
     ArrowRight,
-    Flame,
     Dumbbell,
     Scale,
     Ruler,
     Calculator,
     Move,
+    HeartPulse,
+    Droplet,
+    Moon,
+    Footprints,
 } from 'lucide-react';
 
 export default function DashboardPage() {
     const { profile, derived, goals, userInfo } = useFitnessStore();
+    
+    const currentDate = useHealthTrackerStore((s) => s.currentDate);
+    const logs = useHealthTrackerStore((s) => s.logs);
+    const log = logs[currentDate] || getCachedEmptyLog(currentDate);
 
     const isLosingWeight = profile.weight > goals.targetWeight;
-
-    // Progress bar for macro targets
-    const totalMacroCals =
-        derived.macros.protein * 4 + derived.macros.carbs * 4 + derived.macros.fats * 9;
-    const proteinPct = Math.round(((derived.macros.protein * 4) / totalMacroCals) * 100);
-    const carbsPct = Math.round(((derived.macros.carbs * 4) / totalMacroCals) * 100);
-    const fatsPct = 100 - proteinPct - carbsPct;
 
     return (
         <div className="space-y-8">
@@ -104,50 +105,34 @@ export default function DashboardPage() {
 
             {/* Two Column Layout */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-                {/* Macros Panel - wider */}
-                <div className="lg:col-span-3 bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm">
+                {/* Health Snapshot Panel */}
+                <div className="lg:col-span-3 bg-white dark:bg-zinc-900 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-sm flex flex-col">
                     <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 mb-5 flex items-center gap-2">
-                        <Flame className="w-5 h-5 text-orange-500" />
-                        Daily Macro Targets
+                        <HeartPulse className="w-5 h-5 text-rose-500" />
+                        Today's Health Snapshot
                     </h3>
 
-                    {/* Stacked bar */}
-                    <div className="h-4 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden flex mb-6">
-                        <div
-                            className="bg-blue-500 transition-all duration-500"
-                            style={{ width: `${proteinPct}%` }}
-                        />
-                        <div
-                            className="bg-amber-400 transition-all duration-500"
-                            style={{ width: `${carbsPct}%` }}
-                        />
-                        <div
-                            className="bg-rose-400 transition-all duration-500"
-                            style={{ width: `${fatsPct}%` }}
-                        />
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-4">
-                        <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/15 rounded-xl border border-blue-100 dark:border-blue-900/30">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1 pb-1">
+                        <div className="flex flex-col items-center justify-center p-6 bg-orange-50 dark:bg-orange-900/15 rounded-xl border border-orange-100 dark:border-orange-900/30 transition-transform hover:scale-[1.02]">
+                            <Footprints className="w-8 h-8 text-orange-500 mb-3" />
+                            <p className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+                                {log.steps.toLocaleString()}
+                            </p>
+                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 font-medium">Steps</p>
+                        </div>
+                        <div className="flex flex-col items-center justify-center p-6 bg-blue-50 dark:bg-blue-900/15 rounded-xl border border-blue-100 dark:border-blue-900/30 transition-transform hover:scale-[1.02]">
+                            <Droplet className="w-8 h-8 text-blue-500 mb-3" />
                             <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                                {derived.macros.protein}g
+                                {log.water} <span className="text-xl opacity-60">/ 8</span>
                             </p>
-                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 font-medium">Protein</p>
-                            <p className="text-xs text-zinc-400 mt-0.5">{proteinPct}% of calories</p>
+                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 font-medium">Glasses</p>
                         </div>
-                        <div className="text-center p-4 bg-amber-50 dark:bg-amber-900/15 rounded-xl border border-amber-100 dark:border-amber-900/30">
-                            <p className="text-3xl font-bold text-amber-600 dark:text-amber-400">
-                                {derived.macros.carbs}g
+                        <div className="flex flex-col items-center justify-center p-6 bg-indigo-50 dark:bg-indigo-900/15 rounded-xl border border-indigo-100 dark:border-indigo-900/30 transition-transform hover:scale-[1.02]">
+                            <Moon className="w-8 h-8 text-indigo-500 mb-3" />
+                            <p className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                                {log.sleep.durationHours.toFixed(1)} <span className="text-xl opacity-60">hrs</span>
                             </p>
-                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 font-medium">Carbs</p>
-                            <p className="text-xs text-zinc-400 mt-0.5">{carbsPct}% of calories</p>
-                        </div>
-                        <div className="text-center p-4 bg-rose-50 dark:bg-rose-900/15 rounded-xl border border-rose-100 dark:border-rose-900/30">
-                            <p className="text-3xl font-bold text-rose-600 dark:text-rose-400">
-                                {derived.macros.fats}g
-                            </p>
-                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 font-medium">Fats</p>
-                            <p className="text-xs text-zinc-400 mt-0.5">{fatsPct}% of calories</p>
+                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 font-medium">Sleep</p>
                         </div>
                     </div>
                 </div>

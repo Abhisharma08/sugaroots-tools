@@ -1,8 +1,23 @@
 import { NextResponse } from 'next/server';
 import { getAdminAuth } from '@/lib/firebase-admin';
+import { rateLimit } from '@/lib/rate-limit';
+
+const limiter = rateLimit({
+    interval: 10 * 60 * 1000, // 10 minutes
+    uniqueTokenPerInterval: 500,
+});
 
 export async function POST(request: Request) {
     try {
+        const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
+        const isAllowed = limiter.check(5, ip);
+        if (!isAllowed) {
+            return NextResponse.json(
+                { error: 'Too many verification attempts. Please try again in 10 minutes.' },
+                { status: 429 }
+            );
+        }
+
         const { login_id, otp } = await request.json();
         const adminAuth = getAdminAuth();
 
@@ -22,7 +37,15 @@ export async function POST(request: Request) {
 
         // Step 1: Verify OTP via WordPress
         const wpUrl = process.env.NEXT_PUBLIC_WP_URL || 'https://thesugaroots.com';
-        const apiKey = process.env.FITNESS_APP_SECRET_KEY || 'yoursupersecrettestkey123';
+        const apiKey = process.env.FITNESS_APP_SECRET_KEY;
+
+        if (!apiKey) {
+            console.error('FITNESS_APP_SECRET_KEY is not defined in environment variables.');
+            return NextResponse.json(
+                { error: 'Internal configuration error.' },
+                { status: 500 }
+            );
+        }
         
         const wpRes = await fetch(`${wpUrl}/wp-json/fitness-app/v1/verify-otp`, {
             method: 'POST',

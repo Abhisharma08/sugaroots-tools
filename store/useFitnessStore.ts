@@ -58,6 +58,7 @@ export interface FitnessStore {
   updateProfile: (profile: Partial<UserProfile>) => void;
   updateGoals: (goals: Partial<Goals>) => void;
   setUserInfo: (info: UserInfo) => void;
+  hydrateUserInfo: () => void;
   loadFromFirestore: (uid: string) => Promise<void>;
   saveToFirestore: (uid: string) => Promise<void>;
 }
@@ -169,15 +170,26 @@ export const useFitnessStore = create<FitnessStore>((set, get) => ({
   goals: initialGoals,
   derived: calculateDerivedState(initialProfile, initialGoals),
   firestoreLoaded: false,
-  userInfo: typeof window !== 'undefined'
-    ? JSON.parse(localStorage.getItem('SugaRoots_user_info') || 'null')
-    : null,
+  userInfo: null,
 
   setUserInfo: (info: UserInfo) => {
     if (typeof window !== 'undefined') {
       localStorage.setItem('SugaRoots_user_info', JSON.stringify(info));
     }
     set({ userInfo: info });
+  },
+
+  hydrateUserInfo: () => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('SugaRoots_user_info');
+      if (stored) {
+        try {
+          set({ userInfo: JSON.parse(stored) });
+        } catch (e) {
+          console.error('Failed to parse stored user info:', e);
+        }
+      }
+    }
   },
 
   updateProfile: (newProfile) =>

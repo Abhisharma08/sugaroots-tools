@@ -74,10 +74,12 @@ function fitness_app_register_verify_user_route() {
 // Basic permission check (API Key)
 function fitness_app_verify_user_permissions_check($request) {
     $api_key = $request->get_header('x-fitness-api-key');
-    // Ideally this is defined in wp-config.php or as a constant. For now we hardcode it to match Next.js env
-    $expected_key = defined('FITNESS_APP_SECRET_KEY') ? FITNESS_APP_SECRET_KEY : 'yoursupersecrettestkey123';
+    if (!defined('FITNESS_APP_SECRET_KEY') || empty(FITNESS_APP_SECRET_KEY)) {
+        return new WP_Error('rest_internal_error', 'API security key is not configured on the server.', array('status' => 500));
+    }
+    $expected_key = FITNESS_APP_SECRET_KEY;
     
-    if ($api_key !== $expected_key) {
+    if (empty($api_key) || $api_key !== $expected_key) {
         return new WP_Error('rest_forbidden', 'Invalid API key.', array('status' => 401));
     }
     
@@ -124,8 +126,13 @@ function fitness_app_request_otp_endpoint($request) {
         return new WP_Error('forbidden', 'User does not have an active subscription for any required level.', array('status' => 403));
     }
 
-    // Generate 6-digit OTP
-    $otp = sprintf("%06d", mt_rand(100000, 999999));
+    // Generate 6-digit OTP securely
+    try {
+        $otp = sprintf("%06d", random_int(100000, 999999));
+    } catch (\Exception $e) {
+        // Fallback to mt_rand if random_int fails, although rare in modern PHP environments
+        $otp = sprintf("%06d", mt_rand(100000, 999999));
+    }
     $expires = time() + (5 * 60); // 5 minutes
 
     update_user_meta($user_id, '_fitness_login_otp', md5($otp));

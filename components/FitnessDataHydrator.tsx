@@ -6,7 +6,11 @@ import { useFitnessStore } from '@/store/useFitnessStore';
 
 export function FitnessDataHydrator({ children }: { children: React.ReactNode }) {
     const { user } = useAuth();
-    const { loadFromFirestore, firestoreLoaded } = useFitnessStore();
+    const { loadFromFirestore, hydrateUserInfo } = useFitnessStore();
+
+    useEffect(() => {
+        hydrateUserInfo();
+    }, [hydrateUserInfo]);
 
     useEffect(() => {
         if (user?.uid) {

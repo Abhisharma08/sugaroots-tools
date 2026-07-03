@@ -3,12 +3,12 @@
 // Calorie figures are estimates for a ~75 kg adult.
 //
 // Visuals: `image` is the emoji fallback (always required).
-// Set `media` to show an animation instead:
-//   - Lottie animation:  media: '/animations/sun-salutation.json'
-//     (download JSON from lottiefiles.com into public/animations/)
-//   - Animated GIF:      media: '/exercises/goblet-squat.gif'
-//     (e.g. from ExerciseDB, saved into public/exercises/)
-// If the file is missing or fails to load, the emoji is shown.
+// `media` points to an animation asset under /public:
+//   - Animated GIF:      '/exercises/name.gif'
+//     → downloaded in bulk by `scripts/fetch-exercise-gifs.mjs` (ExerciseDB)
+//   - Lottie animation:  '/animations/name.json'
+//     → downloaded manually from lottiefiles.com into public/animations/
+// Until the file exists (or if it fails to load), the emoji is shown.
 
 export type Audience = 'home-maker' | 'professional';
 
@@ -40,6 +40,8 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
         requiresGym: false,
         steps: { count: 5000, calories: 200 },
         exercises: [
+            // Yoga poses are not in ExerciseDB — add Lottie files to
+            // public/animations/ and set media: '/animations/<name>.json'
             { name: 'Surya Namaskar (Sun Salutation)', image: '🌅', detail: '12 rounds', calories: 90 },
             { name: 'Utkatasana (Chair Pose)', image: '🧘', detail: '3 holds × 30 sec', calories: 20 },
             { name: 'Virabhadrasana II (Warrior II)', image: '🤸', detail: '3 holds × 30 sec per side', calories: 25 },
@@ -55,13 +57,13 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
         requiresGym: false,
         steps: { count: 5000, calories: 200 },
         exercises: [
-            { name: 'Jumping Jacks', image: '🤾', detail: '3 sets × 30 reps', calories: 30 },
-            { name: 'Bodyweight Squats', image: '🏋️', detail: '3 sets × 15 reps', calories: 35 },
-            { name: 'Push-ups', image: '💪', detail: '3 sets × 12 reps', calories: 25 },
-            { name: 'Walking Lunges', image: '🚶', detail: '3 sets × 10 reps per leg', calories: 30 },
-            { name: 'Mountain Climbers', image: '⛰️', detail: '3 sets × 20 reps', calories: 30 },
-            { name: 'Plank Hold', image: '🛶', detail: '3 holds × 40 sec', calories: 20 },
-            { name: 'Burpees', image: '🔥', detail: '2 sets × 10 reps', calories: 30 },
+            { name: 'Jumping Jacks', image: '🤾', media: '/exercises/jumping-jacks.gif', detail: '3 sets × 30 reps', calories: 30 },
+            { name: 'Bodyweight Squats', image: '🏋️', media: '/exercises/bodyweight-squats.gif', detail: '3 sets × 15 reps', calories: 35 },
+            { name: 'Push-ups', image: '💪', media: '/exercises/push-ups.gif', detail: '3 sets × 12 reps', calories: 25 },
+            { name: 'Walking Lunges', image: '🚶', media: '/exercises/walking-lunges.gif', detail: '3 sets × 10 reps per leg', calories: 30 },
+            { name: 'Mountain Climbers', image: '⛰️', media: '/exercises/mountain-climbers.gif', detail: '3 sets × 20 reps', calories: 30 },
+            { name: 'Plank Hold', image: '🛶', media: '/exercises/plank-hold.gif', detail: '3 holds × 40 sec', calories: 20 },
+            { name: 'Burpees', image: '🔥', media: '/exercises/burpees.gif', detail: '2 sets × 10 reps', calories: 30 },
         ],
     },
     {
@@ -71,13 +73,13 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
         requiresGym: false,
         steps: { count: 5000, calories: 200 },
         exercises: [
-            { name: 'Goblet Squats', image: '🏋️', detail: '3 sets × 12 reps', calories: 35 },
-            { name: 'Dumbbell Shoulder Press', image: '💪', detail: '3 sets × 12 reps', calories: 25 },
-            { name: 'Bent-over Dumbbell Rows', image: '🚣', detail: '3 sets × 12 reps', calories: 30 },
-            { name: 'Dumbbell Lunges', image: '🚶', detail: '3 sets × 10 reps per leg', calories: 30 },
-            { name: 'Dumbbell Romanian Deadlifts', image: '🏗️', detail: '3 sets × 12 reps', calories: 30 },
-            { name: 'Dumbbell Bicep Curls', image: '💪', detail: '3 sets × 15 reps', calories: 20 },
-            { name: 'Dumbbell Russian Twists', image: '🌀', detail: '3 sets × 20 reps', calories: 30 },
+            { name: 'Goblet Squats', image: '🏋️', media: '/exercises/goblet-squats.gif', detail: '3 sets × 12 reps', calories: 35 },
+            { name: 'Dumbbell Shoulder Press', image: '💪', media: '/exercises/dumbbell-shoulder-press.gif', detail: '3 sets × 12 reps', calories: 25 },
+            { name: 'Bent-over Dumbbell Rows', image: '🚣', media: '/exercises/bent-over-dumbbell-rows.gif', detail: '3 sets × 12 reps', calories: 30 },
+            { name: 'Dumbbell Lunges', image: '🚶', media: '/exercises/dumbbell-lunges.gif', detail: '3 sets × 10 reps per leg', calories: 30 },
+            { name: 'Dumbbell Romanian Deadlifts', image: '🏗️', media: '/exercises/dumbbell-romanian-deadlifts.gif', detail: '3 sets × 12 reps', calories: 30 },
+            { name: 'Dumbbell Bicep Curls', image: '💪', media: '/exercises/dumbbell-bicep-curls.gif', detail: '3 sets × 15 reps', calories: 20 },
+            { name: 'Dumbbell Russian Twists', image: '🌀', media: '/exercises/dumbbell-russian-twists.gif', detail: '3 sets × 20 reps', calories: 30 },
         ],
     },
 
@@ -89,14 +91,14 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
         requiresGym: true,
         steps: { count: 4000, calories: 160 },
         exercises: [
-            { name: 'Barbell Bench Press', image: '🏋️', detail: '4 sets × 10 reps', calories: 40 },
-            { name: 'Lat Pulldown', image: '🧗', detail: '4 sets × 10 reps', calories: 35 },
-            { name: 'Seated Cable Row', image: '🚣', detail: '3 sets × 12 reps', calories: 30 },
-            { name: 'Dumbbell Shoulder Press', image: '💪', detail: '3 sets × 10 reps', calories: 30 },
-            { name: 'Cable Chest Fly', image: '🦅', detail: '3 sets × 12 reps', calories: 25 },
-            { name: 'Tricep Rope Pushdown', image: '🪢', detail: '3 sets × 12 reps', calories: 20 },
-            { name: 'EZ-Bar Curls', image: '💪', detail: '3 sets × 12 reps', calories: 20 },
-            { name: 'Face Pulls', image: '🎯', detail: '3 sets × 15 reps', calories: 20 },
+            { name: 'Barbell Bench Press', image: '🏋️', media: '/exercises/barbell-bench-press.gif', detail: '4 sets × 10 reps', calories: 40 },
+            { name: 'Lat Pulldown', image: '🧗', media: '/exercises/lat-pulldown.gif', detail: '4 sets × 10 reps', calories: 35 },
+            { name: 'Seated Cable Row', image: '🚣', media: '/exercises/seated-cable-row.gif', detail: '3 sets × 12 reps', calories: 30 },
+            { name: 'Dumbbell Shoulder Press', image: '💪', media: '/exercises/dumbbell-shoulder-press.gif', detail: '3 sets × 10 reps', calories: 30 },
+            { name: 'Cable Chest Fly', image: '🦅', media: '/exercises/cable-chest-fly.gif', detail: '3 sets × 12 reps', calories: 25 },
+            { name: 'Tricep Rope Pushdown', image: '🪢', media: '/exercises/tricep-rope-pushdown.gif', detail: '3 sets × 12 reps', calories: 20 },
+            { name: 'EZ-Bar Curls', image: '💪', media: '/exercises/ez-bar-curls.gif', detail: '3 sets × 12 reps', calories: 20 },
+            { name: 'Face Pulls', image: '🎯', media: '/exercises/face-pulls.gif', detail: '3 sets × 15 reps', calories: 20 },
         ],
     },
     {
@@ -106,13 +108,13 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
         requiresGym: true,
         steps: { count: 4000, calories: 160 },
         exercises: [
-            { name: 'Barbell Back Squats', image: '🏋️', detail: '4 sets × 10 reps', calories: 50 },
-            { name: 'Leg Press', image: '🦵', detail: '4 sets × 12 reps', calories: 45 },
-            { name: 'Romanian Deadlifts', image: '🏗️', detail: '3 sets × 10 reps', calories: 40 },
-            { name: 'Walking Lunges', image: '🚶', detail: '3 sets × 12 reps per leg', calories: 35 },
-            { name: 'Leg Extensions', image: '🦵', detail: '3 sets × 12 reps', calories: 25 },
-            { name: 'Lying Leg Curls', image: '🦵', detail: '3 sets × 12 reps', calories: 25 },
-            { name: 'Standing Calf Raises', image: '🧍', detail: '4 sets × 15 reps', calories: 20 },
+            { name: 'Barbell Back Squats', image: '🏋️', media: '/exercises/barbell-back-squats.gif', detail: '4 sets × 10 reps', calories: 50 },
+            { name: 'Leg Press', image: '🦵', media: '/exercises/leg-press.gif', detail: '4 sets × 12 reps', calories: 45 },
+            { name: 'Romanian Deadlifts', image: '🏗️', media: '/exercises/romanian-deadlifts.gif', detail: '3 sets × 10 reps', calories: 40 },
+            { name: 'Walking Lunges', image: '🚶', media: '/exercises/walking-lunges.gif', detail: '3 sets × 12 reps per leg', calories: 35 },
+            { name: 'Leg Extensions', image: '🦵', media: '/exercises/leg-extensions.gif', detail: '3 sets × 12 reps', calories: 25 },
+            { name: 'Lying Leg Curls', image: '🦵', media: '/exercises/lying-leg-curls.gif', detail: '3 sets × 12 reps', calories: 25 },
+            { name: 'Standing Calf Raises', image: '🧍', media: '/exercises/standing-calf-raises.gif', detail: '4 sets × 15 reps', calories: 20 },
         ],
     },
     {
@@ -122,13 +124,13 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
         requiresGym: true,
         steps: { count: 5000, calories: 200 },
         exercises: [
-            { name: 'Hanging Knee Raises', image: '🙆', detail: '3 sets × 12 reps', calories: 30 },
-            { name: 'Cable Crunches', image: '🪢', detail: '3 sets × 15 reps', calories: 30 },
-            { name: 'Plank Hold', image: '🛶', detail: '3 holds × 40 sec', calories: 30 },
-            { name: 'Russian Twists', image: '🌀', detail: '3 sets × 20 reps', calories: 30 },
-            { name: 'Leg Raises', image: '🦵', detail: '3 sets × 15 reps', calories: 30 },
-            { name: 'Side Plank', image: '📐', detail: '3 holds × 30 sec per side', calories: 25 },
-            { name: 'Bicycle Crunches', image: '🚴', detail: '3 sets × 20 reps', calories: 25 },
+            { name: 'Hanging Knee Raises', image: '🙆', media: '/exercises/hanging-knee-raises.gif', detail: '3 sets × 12 reps', calories: 30 },
+            { name: 'Cable Crunches', image: '🪢', media: '/exercises/cable-crunches.gif', detail: '3 sets × 15 reps', calories: 30 },
+            { name: 'Plank Hold', image: '🛶', media: '/exercises/plank-hold.gif', detail: '3 holds × 40 sec', calories: 30 },
+            { name: 'Russian Twists', image: '🌀', media: '/exercises/dumbbell-russian-twists.gif', detail: '3 sets × 20 reps', calories: 30 },
+            { name: 'Leg Raises', image: '🦵', media: '/exercises/leg-raises.gif', detail: '3 sets × 15 reps', calories: 30 },
+            { name: 'Side Plank', image: '📐', media: '/exercises/side-plank.gif', detail: '3 holds × 30 sec per side', calories: 25 },
+            { name: 'Bicycle Crunches', image: '🚴', media: '/exercises/bicycle-crunches.gif', detail: '3 sets × 20 reps', calories: 25 },
         ],
     },
     {
@@ -137,10 +139,10 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
         subtitle: 'Machine cardio circuit — do all four, or mix your favourites to reach the target.',
         requiresGym: true,
         exercises: [
-            { name: 'Incline Treadmill Walk', image: '🏃', detail: '20 minutes (moderate incline)', calories: 150 },
-            { name: 'Stationary Cycling', image: '🚴', detail: '15 minutes (steady pace)', calories: 120 },
-            { name: 'Rowing Machine', image: '🚣', detail: '10 minutes (steady pace)', calories: 90 },
-            { name: 'Stair Climber', image: '🪜', detail: '5 minutes', calories: 40 },
+            { name: 'Incline Treadmill Walk', image: '🏃', media: '/exercises/incline-treadmill-walk.gif', detail: '20 minutes (moderate incline)', calories: 150 },
+            { name: 'Stationary Cycling', image: '🚴', media: '/exercises/stationary-cycling.gif', detail: '15 minutes (steady pace)', calories: 120 },
+            { name: 'Rowing Machine', image: '🚣', media: '/exercises/rowing-machine.gif', detail: '10 minutes (steady pace)', calories: 90 },
+            { name: 'Stair Climber', image: '🪜', media: '/exercises/stair-climber.gif', detail: '5 minutes', calories: 40 },
         ],
     },
 ];

@@ -98,7 +98,7 @@ export default function BMRCalculator() {
         <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-3xl shadow-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 transition-all duration-300">
             <div className="grid grid-cols-1 md:grid-cols-2">
                 {/* Form Section */}
-                <div className="p-8 lg:p-10">
+                <div className="p-6 sm:p-8 lg:p-10">
                     <div className="flex items-center space-x-3 mb-8">
                         <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
                             <Activity className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -114,7 +114,7 @@ export default function BMRCalculator() {
                     </div>
 
                     <form className="space-y-5">
-                        <div className="grid grid-cols-2 gap-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             {/* Age */}
                             <div className="space-y-1.5">
                                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
@@ -167,7 +167,7 @@ export default function BMRCalculator() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             {/* Weight */}
                             <div className="space-y-1.5">
                                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-2">

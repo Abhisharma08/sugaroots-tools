@@ -107,7 +107,7 @@ export default function HabitTracker() {
         <div className="bg-white dark:bg-zinc-950 rounded-3xl p-4 sm:p-6 shadow-sm border border-zinc-200 dark:border-zinc-800 w-full max-w-3xl mx-auto font-sans">
             
             {/* TOP HEADER */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                 <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-baseline gap-2">
                     Today, <span className="text-zinc-400 font-medium">{format(new Date(), 'do MMM')}</span>
                 </h2>

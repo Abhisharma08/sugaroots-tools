@@ -141,13 +141,13 @@ export default function FoodLogTab() {
           ) : (
             <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
               {log.food.map((entry) => (
-                <div key={entry.id} className="p-4 flex items-center justify-between hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
+                <div key={entry.id} className="p-4 flex flex-wrap items-center justify-between gap-2 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
                       <span className="text-xs font-semibold text-blue-600 bg-blue-50 dark:bg-blue-900/30 px-2 py-0.5 rounded uppercase tracking-wider">{entry.category}</span>
-                      <span className="font-semibold text-zinc-900 dark:text-zinc-100">{entry.name}</span>
+                      <span className="font-semibold text-zinc-900 dark:text-zinc-100 break-words">{entry.name}</span>
                     </div>
-                    <div className="text-sm text-zinc-500 flex gap-3">
+                    <div className="text-sm text-zinc-500 flex flex-wrap gap-x-3 gap-y-1">
                       {entry.quantity && <span>{entry.quantity}</span>}
                       <span>P: {entry.protein}g</span>
                       <span>C: {entry.carbs}g</span>

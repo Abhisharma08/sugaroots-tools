@@ -15,6 +15,7 @@ import {
     type DocumentData,
 } from 'firebase/firestore';
 import { getClientDb } from './firebase';
+import type { DailyLog } from '@/store/useHealthTrackerStore';
 
 // ─── User Profile ───────────────────────────────────────────
 
@@ -146,6 +147,31 @@ export async function addHabit(uid: string, title: string, category?: string): P
 export async function deleteHabit(uid: string, habitId: string): Promise<void> {
     const ref = doc(getClientDb(), 'users', uid, 'habits', habitId);
     await deleteDoc(ref);
+}
+
+// ─── Health Tracker Daily Logs ───────────────────────────────
+
+/**
+ * Save a single day's health log (keyed by YYYY-MM-DD)
+ */
+export async function saveHealthLog(uid: string, log: DailyLog): Promise<void> {
+    const ref = doc(getClientDb(), 'users', uid, 'healthLogs', log.date);
+    await setDoc(ref, { ...log, updatedAt: serverTimestamp() }, { merge: true });
+}
+
+/**
+ * Fetch all health logs for a user as a date-keyed map
+ */
+export async function getHealthLogs(uid: string): Promise<Record<string, DailyLog>> {
+    const colRef = collection(getClientDb(), 'users', uid, 'healthLogs');
+    const snap = await getDocs(colRef);
+    const logs: Record<string, DailyLog> = {};
+    snap.docs.forEach((d) => {
+        const { updatedAt, ...log } = d.data();
+        void updatedAt;
+        logs[d.id] = log as DailyLog;
+    });
+    return logs;
 }
 
 /**

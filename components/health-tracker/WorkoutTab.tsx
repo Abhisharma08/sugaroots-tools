@@ -53,7 +53,7 @@ export default function WorkoutTab() {
         <div className="absolute right-0 top-0 opacity-10">
           <Dumbbell className="w-48 h-48 -mr-10 -mt-10" />
         </div>
-        <div className="relative z-10 flex justify-between items-end">
+        <div className="relative z-10 flex flex-wrap justify-between items-end gap-4">
           <div>
             <p className="text-blue-200 font-medium mb-1">Total Workout Burn</p>
             <p className="text-5xl font-bold">{metrics.workoutCalories} <span className="text-2xl font-medium text-blue-200">kcal</span></p>

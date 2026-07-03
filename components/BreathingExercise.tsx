@@ -155,7 +155,7 @@ export default function BreathingExercise() {
 
 
     return (
-        <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-3xl shadow-sm border border-zinc-200 dark:border-zinc-800 p-8 lg:p-12 transition-all duration-300">
+        <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-3xl shadow-sm border border-zinc-200 dark:border-zinc-800 p-6 sm:p-8 lg:p-12 transition-all duration-300">
             <div className="text-center max-w-2xl mx-auto mb-10">
                 <div className="mx-auto w-12 h-12 bg-teal-100 dark:bg-teal-900/30 rounded-2xl flex items-center justify-center mb-4">
                     <Wind className="w-6 h-6 text-teal-600 dark:text-teal-400" />

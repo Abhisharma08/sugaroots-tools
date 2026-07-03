@@ -17,7 +17,7 @@ export function Tabs({ tabs }: TabsProps) {
 
     return (
         <div className="w-full">
-            <div className="flex gap-1 p-1 bg-zinc-100 dark:bg-zinc-800/60 rounded-xl mb-6">
+            <div className="flex gap-1 p-1 bg-zinc-100 dark:bg-zinc-800/60 rounded-xl mb-6 overflow-x-auto">
                 {tabs.map((tab, index) => {
                     const isActive = activeTab === index;
                     const Icon = tab.icon;

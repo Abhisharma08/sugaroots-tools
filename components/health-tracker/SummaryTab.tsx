@@ -33,7 +33,7 @@ export default function SummaryTab() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Health Score */}
-        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm flex items-center justify-between">
+        <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm flex flex-wrap items-center justify-between gap-4">
           <div>
             <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">Daily Score</h3>
             <div className="flex items-end gap-2">
@@ -57,7 +57,7 @@ export default function SummaryTab() {
 
         {/* Net Calorie Balance */}
         <div className="lg:col-span-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm relative overflow-hidden">
-          <div className="flex justify-between items-start mb-6 relative z-10">
+          <div className="flex flex-wrap justify-between items-start gap-3 mb-6 relative z-10">
             <div>
               <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">Net Calorie Balance</h3>
               <div className="flex items-end gap-3">

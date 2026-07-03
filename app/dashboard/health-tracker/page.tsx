@@ -20,18 +20,28 @@ export default function HealthTrackerPage() {
   const currentDate = useHealthTrackerStore((s) => s.currentDate);
   const setCurrentDate = useHealthTrackerStore((s) => s.setCurrentDate);
   const hydrated = useHealthTrackerStore((s) => s._hydrated);
+  const saveLogNow = useHealthTrackerStore((s) => s.saveLogNow);
+  const syncError = useHealthTrackerStore((s) => s.syncError);
   const [activeTab, setActiveTab] = useState(TABS[0]);
   const [showSaveToast, setShowSaveToast] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // We rely on Zustand's persist middleware for auto-saving, 
-  // but we add a manual save button for UX reassurance as requested.
-  const handleSave = () => {
-    setShowSaveToast(true);
-    setTimeout(() => setShowSaveToast(false), 3000);
+  // Edits auto-save to Firestore (debounced); this button forces an immediate save.
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await saveLogNow(currentDate);
+      setShowSaveToast(true);
+      setTimeout(() => setShowSaveToast(false), 3000);
+    } catch {
+      // syncError banner surfaces the failure
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handlePrevDay = () => {
@@ -59,7 +69,13 @@ export default function HealthTrackerPage() {
       {/* Header & Date Picker */}
       <header className="mb-8">
         <h1 className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-6">Sugar Roots Health Tracker</h1>
-        
+
+        {syncError && (
+          <div className="mb-4 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-sm text-amber-800 dark:text-amber-400">
+            {syncError}
+          </div>
+        )}
+
         <div className="flex items-center justify-between bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
           <button onClick={handlePrevDay} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">
             <ChevronLeft className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
@@ -113,7 +129,7 @@ export default function HealthTrackerPage() {
       </div>
 
       {/* Floating Save Button */}
-      <div className="fixed bottom-8 right-8 z-50">
+      <div className="fixed bottom-5 right-5 sm:bottom-8 sm:right-8 z-50">
         {showSaveToast && (
           <div className="absolute bottom-full right-0 mb-4 px-4 py-3 bg-zinc-900 text-white text-sm font-semibold rounded-xl shadow-lg flex items-center gap-2 animate-in slide-in-from-bottom-2">
             <Check className="w-4 h-4 text-emerald-400" />
@@ -122,10 +138,11 @@ export default function HealthTrackerPage() {
         )}
         <button
           onClick={handleSave}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-2xl shadow-xl shadow-blue-600/30 font-bold transition-all hover:scale-105 active:scale-95"
+          disabled={isSaving}
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 sm:px-6 sm:py-4 rounded-2xl shadow-xl shadow-blue-600/30 font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-70 disabled:hover:scale-100"
         >
-          <Save className="w-5 h-5" />
-          Save Day
+          <Save className={`w-5 h-5 ${isSaving ? 'animate-pulse' : ''}`} />
+          {isSaving ? 'Saving…' : 'Save Day'}
         </button>
       </div>
 

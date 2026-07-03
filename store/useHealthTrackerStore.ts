@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { format } from 'date-fns';
+import { saveHealthLog, getHealthLogs } from '@/lib/firestore';
 
 export interface FoodEntry {
   id: string;
@@ -58,9 +59,12 @@ interface HealthTrackerState {
   logs: Record<string, DailyLog>; // map of date YYYY-MM-DD to DailyLog
   currentDate: string; // YYYY-MM-DD
   _hydrated: boolean; // whether persist storage has been loaded
+  syncError: string | null; // last Firestore save/load failure, if any
   setCurrentDate: (date: string) => void;
   updateLog: (date: string, partial: Partial<DailyLog>) => void;
   getLog: (date: string) => DailyLog;
+  startFirestoreSync: (uid: string) => Promise<void>;
+  saveLogNow: (date: string) => Promise<void>;
   
   // Specific quick actions for the current date
   updateVitals: (vitals: Partial<{ weight: number; steps: number }>) => void;
@@ -85,13 +89,69 @@ export const getCachedEmptyLog = (date: string): DailyLog => {
 
 const mergedLogCache = new WeakMap<object, DailyLog>();
 
+// Firestore sync state (module-level; not part of the reactive store)
+let syncUid: string | null = null;
+const saveTimers = new Map<string, ReturnType<typeof setTimeout>>();
+
 export const useHealthTrackerStore = create<HealthTrackerState>()(
   persist(
-    (set, get) => ({
+    (set, get) => {
+      // Debounced per-date write-through to Firestore
+      const scheduleSave = (date: string) => {
+        if (!syncUid) return;
+        const uid = syncUid;
+        const existing = saveTimers.get(date);
+        if (existing) clearTimeout(existing);
+        saveTimers.set(
+          date,
+          setTimeout(() => {
+            saveTimers.delete(date);
+            saveHealthLog(uid, get().getLog(date)).then(
+              () => set({ syncError: null }),
+              (err) => {
+                console.error('Failed to save health log to Firestore:', err);
+                set({ syncError: 'Could not save to the cloud. Changes are kept on this device.' });
+              }
+            );
+          }, 1000)
+        );
+      };
+
+      return {
       logs: {},
       currentDate: format(new Date(), 'yyyy-MM-dd'),
       _hydrated: false,
-      
+      syncError: null,
+
+      startFirestoreSync: async (uid) => {
+        syncUid = uid;
+        try {
+          const remote = await getHealthLogs(uid);
+          // Remote is the source of truth across devices; merge over local cache
+          set((state) => ({ logs: { ...state.logs, ...remote }, syncError: null }));
+        } catch (err) {
+          console.error('Failed to load health logs from Firestore:', err);
+          set({ syncError: 'Could not load your cloud data. Showing local data only.' });
+        }
+      },
+
+      saveLogNow: async (date) => {
+        const timer = saveTimers.get(date);
+        if (timer) {
+          clearTimeout(timer);
+          saveTimers.delete(date);
+        }
+        if (!syncUid) return;
+        try {
+          await saveHealthLog(syncUid, get().getLog(date));
+          set({ syncError: null });
+        } catch (err) {
+          console.error('Failed to save health log to Firestore:', err);
+          set({ syncError: 'Could not save to the cloud. Changes are kept on this device.' });
+          throw err;
+        }
+      },
+
       setCurrentDate: (date) => set({ currentDate: date }),
       
       getLog: (date) => {
@@ -123,16 +183,19 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
         return merged;
       },
       
-      updateLog: (date, partial) => set((state) => {
-        // Use getLog from the store closure (get()) instead of state to avoid issues
-        const log = get().getLog(date);
-        return {
-          logs: {
-            ...state.logs,
-            [date]: { ...log, ...partial },
-          },
-        };
-      }),
+      updateLog: (date, partial) => {
+        set((state) => {
+          // Use getLog from the store closure (get()) instead of state to avoid issues
+          const log = get().getLog(date);
+          return {
+            logs: {
+              ...state.logs,
+              [date]: { ...log, ...partial },
+            },
+          };
+        });
+        scheduleSave(date);
+      },
       
       updateVitals: (vitals) => {
         const date = get().currentDate;
@@ -180,7 +243,8 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
         const log = get().getLog(date);
         get().updateLog(date, { workouts: log.workouts.filter(w => w.id !== id) });
       },
-    }),
+      };
+    },
     {
       name: 'SugaRoots_health_tracker',
       // Exclude internal flags from persistence

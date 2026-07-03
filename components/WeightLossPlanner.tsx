@@ -85,7 +85,7 @@ export default function WeightLossPlanner() {
         <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-3xl shadow-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 transition-all duration-300 mt-8">
             <div className="grid grid-cols-1 md:grid-cols-2">
                 {/* Input Section */}
-                <div className="p-8 lg:p-10 border-r border-zinc-100 dark:border-zinc-800/50">
+                <div className="p-6 sm:p-8 lg:p-10 border-r border-zinc-100 dark:border-zinc-800/50">
                     <div className="flex items-center gap-3 mb-8">
                         <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
                             <Target className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />

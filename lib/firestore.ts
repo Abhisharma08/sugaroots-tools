@@ -149,6 +149,22 @@ export async function deleteHabit(uid: string, habitId: string): Promise<void> {
     await deleteDoc(ref);
 }
 
+// ─── Workout Planner ─────────────────────────────────────────
+
+export interface WorkoutSelection {
+    audience: 'home-maker' | 'professional';
+    hasGym: boolean;
+    planId: string | null;
+}
+
+/**
+ * Persist the user's workout planner selection on their user doc
+ */
+export async function saveWorkoutSelection(uid: string, selection: WorkoutSelection): Promise<void> {
+    const ref = doc(getClientDb(), 'users', uid);
+    await setDoc(ref, { workoutPlanner: { ...selection, updatedAt: serverTimestamp() } }, { merge: true });
+}
+
 // ─── Health Tracker Daily Logs ───────────────────────────────
 
 /**

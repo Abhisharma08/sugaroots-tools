@@ -1,14 +1,21 @@
 // ─── Workout Planner data ────────────────────────────────────
 // Every plan targets a total burn of ~400 kcal (steps + exercises).
 // Calorie figures are estimates for a ~75 kg adult.
-// The `image` field is an emoji visual; replace with a /public image
-// path (e.g. '/exercises/squat.jpg') to show real photos.
+//
+// Visuals: `image` is the emoji fallback (always required).
+// Set `media` to show an animation instead:
+//   - Lottie animation:  media: '/animations/sun-salutation.json'
+//     (download JSON from lottiefiles.com into public/animations/)
+//   - Animated GIF:      media: '/exercises/goblet-squat.gif'
+//     (e.g. from ExerciseDB, saved into public/exercises/)
+// If the file is missing or fails to load, the emoji is shown.
 
 export type Audience = 'home-maker' | 'professional';
 
 export interface PlanExercise {
     name: string;
-    image: string;
+    image: string; // emoji fallback
+    media?: string; // optional Lottie JSON or GIF/image path under /public
     detail: string; // reps / sets / duration reference
     calories: number;
 }

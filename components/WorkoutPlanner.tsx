@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/components/AuthProvider';
+import { ExerciseMedia } from '@/components/ExerciseMedia';
 import { getUserData, saveWorkoutSelection } from '@/lib/firestore';
 import {
     WORKOUT_PLANS,
@@ -304,8 +305,8 @@ function PlanDetail({ plan, onBack }: { plan: WorkoutPlan; onBack: () => void })
                             key={ex.name}
                             className="p-4 sm:p-5 flex flex-wrap items-center gap-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
                         >
-                            <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-2xl bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 border border-zinc-100 dark:border-zinc-800 flex items-center justify-center text-3xl sm:text-4xl">
-                                {ex.image}
+                            <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-2xl bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 border border-zinc-100 dark:border-zinc-800 flex items-center justify-center text-3xl sm:text-4xl overflow-hidden">
+                                <ExerciseMedia media={ex.media} fallback={ex.image} alt={ex.name} />
                             </div>
                             <div className="flex-1 min-w-[10rem]">
                                 <h4 className="font-semibold text-zinc-900 dark:text-zinc-100">{ex.name}</h4>

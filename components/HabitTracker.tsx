@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useMemo } from 'react';
 import { useHabitStore } from '@/store/useHabitStore';
-import { useFitnessStore } from '@/store/useFitnessStore';
+import { useAuth } from '@/components/AuthProvider';
 import { Settings, Gauge, Plus, Zap, Loader2, LayoutGrid, Users, HeartPulse, Briefcase, Hash } from 'lucide-react';
 import { format, subDays, isToday } from 'date-fns';
 
@@ -14,7 +14,7 @@ const CATEGORY_ICONS: Record<string, React.ElementType> = {
 };
 
 export default function HabitTracker() {
-    const { userInfo } = useFitnessStore();
+    const { user } = useAuth();
     const { habits, isLoading, fetchHabits, toggleHabit, createNewHabit } = useHabitStore();
     const [selectedCategory, setSelectedCategory] = useState('All');
     
@@ -38,10 +38,10 @@ export default function HabitTracker() {
     }, [habits, localCategories]);
 
     useEffect(() => {
-        if (userInfo?.uid) {
-            fetchHabits(userInfo.uid);
+        if (user?.uid) {
+            fetchHabits(user.uid);
         }
-    }, [userInfo?.uid, fetchHabits]);
+    }, [user?.uid, fetchHabits]);
 
     // Generate the last 5 days (including today)
     const dateColumns = useMemo(() => {
@@ -69,16 +69,16 @@ export default function HabitTracker() {
     const completionPercentage = totalTodayHabits === 0 ? 0 : Math.round((completedToday / totalTodayHabits) * 100);
 
     const handleToggle = (habitId: string | undefined, dateStr: string, completedDates: string[]) => {
-        if (!userInfo?.uid || !habitId) return;
+        if (!user?.uid || !habitId) return;
         const isCompleted = completedDates.includes(dateStr);
-        toggleHabit(userInfo.uid, habitId, dateStr, !isCompleted);
+        toggleHabit(user.uid, habitId, dateStr, !isCompleted);
     };
 
     const handleAddHabit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!userInfo?.uid || !newTitle.trim() || !newCategory.trim()) return;
+        if (!user?.uid || !newTitle.trim() || !newCategory.trim()) return;
         
-        await createNewHabit(userInfo.uid, newTitle.trim(), newCategory.trim());
+        await createNewHabit(user.uid, newTitle.trim(), newCategory.trim());
         setNewTitle('');
         setNewCategory('');
         setIsAdding(false);

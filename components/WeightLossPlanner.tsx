@@ -28,13 +28,14 @@ function inputCls(hasError: boolean, accent: string = 'emerald') {
 }
 
 export default function WeightLossPlanner() {
-    const { profile, goals, derived, updateGoals, saveToFirestore } = useFitnessStore();
+    const { profile, goals, derived, updateGoals, saveToFirestore, firestoreLoaded } = useFitnessStore();
     const { user } = useAuth();
     const saveTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
     const {
         register,
         watch,
+        reset,
         formState: { errors, isValid },
     } = useForm<PlannerFormValues>({
         resolver: zodResolver(plannerSchema),
@@ -46,6 +47,15 @@ export default function WeightLossPlanner() {
     });
 
     const hasErrors = Object.keys(errors).length > 0;
+
+    // Sync the form once saved goals arrive from Firestore, so stale
+    // defaults captured at mount don't overwrite the user's saved data.
+    React.useEffect(() => {
+        if (firestoreLoaded) {
+            const { goals: loaded } = useFitnessStore.getState();
+            reset({ targetWeight: loaded.targetWeight, pace: loaded.pace });
+        }
+    }, [firestoreLoaded, reset]);
 
     // Watch for changes — only update store when valid
     React.useEffect(() => {

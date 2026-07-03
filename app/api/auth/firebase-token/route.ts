@@ -9,7 +9,7 @@ const limiter = rateLimit({
 
 export async function POST(request: Request) {
     try {
-        const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
+        const ip = request.headers.get('x-forwarded-for')?.split(',')[0].trim() || '127.0.0.1';
         const isAllowed = limiter.check(5, ip);
         if (!isAllowed) {
             return NextResponse.json(
@@ -67,6 +67,13 @@ export async function POST(request: Request) {
 
         // Step 2: WordPress verified → generate Firebase custom token
         const wpUser = wpData.data;
+        if (!wpUser?.user_id) {
+            console.error('WordPress verify-otp returned OK without user data:', wpData);
+            return NextResponse.json(
+                { error: 'Subscription verification failed.' },
+                { status: 502 }
+            );
+        }
         const firebaseUid = `wp_${wpUser.user_id}`;
 
         const firebaseToken = await adminAuth.createCustomToken(firebaseUid, {

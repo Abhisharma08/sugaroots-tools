@@ -36,13 +36,14 @@ function inputCls(hasError: boolean) {
 }
 
 export default function BMRCalculator() {
-    const { profile, derived, updateProfile, saveToFirestore } = useFitnessStore();
+    const { profile, derived, updateProfile, saveToFirestore, firestoreLoaded } = useFitnessStore();
     const { user } = useAuth();
     const saveTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
     const {
         register,
         watch,
+        reset,
         formState: { errors, isValid },
     } = useForm<BMRFormValues>({
         resolver: zodResolver(bmrSchema),
@@ -57,6 +58,21 @@ export default function BMRCalculator() {
     });
 
     const hasErrors = Object.keys(errors).length > 0;
+
+    // Sync the form once the saved profile arrives from Firestore, so stale
+    // defaults captured at mount don't overwrite the user's saved data.
+    React.useEffect(() => {
+        if (firestoreLoaded) {
+            const { profile: loaded } = useFitnessStore.getState();
+            reset({
+                age: loaded.age,
+                gender: loaded.gender,
+                weight: loaded.weight,
+                height: loaded.height,
+                activityLevel: loaded.activityLevel,
+            });
+        }
+    }, [firestoreLoaded, reset]);
 
     // Watch for changes — only update store when valid
     React.useEffect(() => {

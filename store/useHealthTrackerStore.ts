@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { format } from 'date-fns';
 
 export interface FoodEntry {
   id: string;
@@ -88,7 +89,7 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
   persist(
     (set, get) => ({
       logs: {},
-      currentDate: new Date().toISOString().split('T')[0],
+      currentDate: format(new Date(), 'yyyy-MM-dd'),
       _hydrated: false,
       
       setCurrentDate: (date) => set({ currentDate: date }),

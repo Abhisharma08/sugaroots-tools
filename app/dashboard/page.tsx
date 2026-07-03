@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { format } from 'date-fns';
 import { useFitnessStore } from '@/store/useFitnessStore';
 import { useHealthTrackerStore, getCachedEmptyLog } from '@/store/useHealthTrackerStore';
 import {
@@ -21,10 +23,17 @@ import {
 
 export default function DashboardPage() {
     const { profile, derived, goals, userInfo } = useFitnessStore();
-    
-    const currentDate = useHealthTrackerStore((s) => s.currentDate);
-    const logs = useHealthTrackerStore((s) => s.logs);
-    const log = logs[currentDate] || getCachedEmptyLog(currentDate);
+
+    // Wait for client mount before reading persisted logs to avoid hydration mismatches
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const todayIso = format(new Date(), 'yyyy-MM-dd');
+    const todayLog = useHealthTrackerStore((s) => s.logs[todayIso]);
+    const getLog = useHealthTrackerStore((s) => s.getLog);
+    const log = mounted && todayLog ? getLog(todayIso) : getCachedEmptyLog(todayIso);
 
     const isLosingWeight = profile.weight > goals.targetWeight;
 

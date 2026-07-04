@@ -101,10 +101,14 @@ async function searchExercises(term) {
     return res.json();
 }
 
-function pickBest(results, term) {
+function pickBest(results, term, preferEquipment) {
     if (!Array.isArray(results) || results.length === 0) return null;
-    const exact = results.find((r) => r.name?.toLowerCase() === term.toLowerCase());
-    return exact ?? results[0];
+    const pool = preferEquipment
+        ? results.filter((r) => r.equipment === preferEquipment)
+        : results;
+    if (pool.length === 0) return null;
+    const exact = pool.find((r) => r.name?.toLowerCase() === term.toLowerCase());
+    return exact ?? pool[0];
 }
 
 // Exercise objects no longer carry a gifUrl; GIFs are served by the
@@ -126,7 +130,7 @@ async function main() {
     let skipped = 0;
     const failed = [];
 
-    for (const { slug, terms } of EXERCISES) {
+    for (const { slug, id, terms, preferEquipment } of EXERCISES) {
         const outPath = path.join(OUT_DIR, `${slug}.gif`);
         if (await fileExists(outPath)) {
             console.log(`✓ ${slug} (already downloaded)`);
@@ -134,32 +138,35 @@ async function main() {
             continue;
         }
 
-        let match = null;
-        let matchedTerm = null;
-        for (const term of terms) {
-            try {
-                const results = await searchExercises(term);
-                match = pickBest(results, term);
-                if (match?.id) {
-                    matchedTerm = term;
-                    break;
+        let matchId = id ?? null;
+        let matchLabel = id ? `id ${id}` : null;
+        if (!matchId) {
+            for (const term of terms ?? []) {
+                try {
+                    const results = await searchExercises(term);
+                    const match = pickBest(results, term, preferEquipment);
+                    if (match?.id) {
+                        matchId = match.id;
+                        matchLabel = `"${match.name}" (term: "${term}")`;
+                        break;
+                    }
+                } catch (err) {
+                    console.warn(`  search "${term}" for ${slug}: ${err.message}`);
                 }
-            } catch (err) {
-                console.warn(`  search "${term}" for ${slug}: ${err.message}`);
+                await sleep(DELAY_MS);
             }
-            await sleep(DELAY_MS);
         }
 
-        if (!match?.id) {
+        if (!matchId) {
             console.warn(`✗ ${slug} — no match found (emoji fallback will be used)`);
             failed.push(slug);
             continue;
         }
 
         try {
-            const gif = await downloadGif(match.id);
+            const gif = await downloadGif(matchId);
             await writeFile(outPath, gif);
-            console.log(`✓ ${slug} ← "${match.name}" (term: "${matchedTerm}", ${(gif.length / 1024).toFixed(0)} KB)`);
+            console.log(`✓ ${slug} ← ${matchLabel} (${(gif.length / 1024).toFixed(0)} KB)`);
             done++;
         } catch (err) {
             console.warn(`✗ ${slug} — ${err.message} (emoji fallback will be used)`);

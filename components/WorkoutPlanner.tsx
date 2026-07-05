@@ -6,7 +6,6 @@ import { ExerciseMedia } from '@/components/ExerciseMedia';
 import { getUserData, saveWorkoutSelection } from '@/lib/firestore';
 import {
     WORKOUT_PLANS,
-    TARGET_BURN,
     getPlanTotal,
     type Audience,
     type WorkoutPlan,
@@ -323,6 +322,12 @@ function PlanDetail({ plan, onBack }: { plan: WorkoutPlan; onBack: () => void })
             <p className="text-xs text-zinc-400 dark:text-zinc-500 text-center px-4">
                 Calorie values are estimates for a ~75 kg adult and vary with body weight, pace and intensity.
                 Consult your doctor before starting a new exercise programme.
+                {plan.id === 'steps-yoga' && (
+                    <>
+                        {' '}
+                        Yoga imagery: Kennguru &amp; lululemon athletica (CC BY), Camino (CC BY-SA) via Wikimedia Commons.
+                    </>
+                )}
             </p>
         </section>
     );

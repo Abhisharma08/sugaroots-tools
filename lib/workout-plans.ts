@@ -40,14 +40,14 @@ export const WORKOUT_PLANS: WorkoutPlan[] = [
         requiresGym: false,
         steps: { count: 5000, calories: 200 },
         exercises: [
-            // Yoga poses are not in ExerciseDB — add Lottie files to
-            // public/animations/ and set media: '/animations/<name>.json'
-            { name: 'Surya Namaskar (Sun Salutation)', image: '🌅', detail: '12 rounds', calories: 90 },
-            { name: 'Utkatasana (Chair Pose)', image: '🧘', detail: '3 holds × 30 sec', calories: 20 },
-            { name: 'Virabhadrasana II (Warrior II)', image: '🤸', detail: '3 holds × 30 sec per side', calories: 25 },
-            { name: 'Bhujangasana (Cobra Pose)', image: '🐍', detail: '3 holds × 10 breaths', calories: 15 },
-            { name: 'Setu Bandhasana (Bridge Pose)', image: '🌉', detail: '3 sets × 12 lifts', calories: 25 },
-            { name: 'Phalakasana (Plank Pose)', image: '🛶', detail: '3 holds × 30 sec', calories: 25 },
+            // Yoga visuals: Wikimedia Commons (CC — see credits in the UI)
+            // and ExerciseDB; Sun Salutation and Bridge are animated.
+            { name: 'Surya Namaskar (Sun Salutation)', image: '🌅', media: '/exercises/surya-namaskar.gif', detail: '12 rounds', calories: 90 },
+            { name: 'Utkatasana (Chair Pose)', image: '🧘', media: '/exercises/utkatasana.jpg', detail: '3 holds × 30 sec', calories: 20 },
+            { name: 'Virabhadrasana II (Warrior II)', image: '🤸', media: '/exercises/virabhadrasana.jpg', detail: '3 holds × 30 sec per side', calories: 25 },
+            { name: 'Bhujangasana (Cobra Pose)', image: '🐍', media: '/exercises/bhujangasana.jpg', detail: '3 holds × 10 breaths', calories: 15 },
+            { name: 'Setu Bandhasana (Bridge Pose)', image: '🌉', media: '/exercises/setu-bandhasana.gif', detail: '3 sets × 12 lifts', calories: 25 },
+            { name: 'Phalakasana (Plank Pose)', image: '🛶', media: '/exercises/plank-hold.gif', detail: '3 holds × 30 sec', calories: 25 },
         ],
     },
     {

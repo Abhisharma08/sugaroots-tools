@@ -17,11 +17,13 @@ interface ExerciseMediaProps {
     /** Emoji fallback shown when no media is set or it fails to load */
     fallback: string;
     alt: string;
+    /** 'cover' crops to fill the tile (default); 'contain' shows the whole image */
+    fit?: 'cover' | 'contain';
 }
 
 const IMAGE_RE = /\.(gif|png|jpe?g|webp|svg)$/i;
 
-export function ExerciseMedia({ media, fallback, alt }: ExerciseMediaProps) {
+export function ExerciseMedia({ media, fallback, alt, fit = 'cover' }: ExerciseMediaProps) {
     const isLottie = !!media && media.toLowerCase().endsWith('.json');
     const isImage = !!media && IMAGE_RE.test(media);
 
@@ -70,7 +72,7 @@ export function ExerciseMedia({ media, fallback, alt }: ExerciseMediaProps) {
                 alt={alt}
                 loading="lazy"
                 onError={() => setFailed(true)}
-                className="w-full h-full object-cover"
+                className={`w-full h-full ${fit === 'contain' ? 'object-contain' : 'object-cover'}`}
             />
         );
     }

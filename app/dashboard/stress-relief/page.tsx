@@ -1,7 +1,7 @@
 import BreathingExercise from '@/components/BreathingExercise';
 
 export const metadata = {
-    title: 'Stress Relief | SugaRoots',
+    title: 'Stress Relief | TheSugaRoots',
 };
 
 export default function StressReliefPage() {

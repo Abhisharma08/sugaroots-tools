@@ -117,6 +117,13 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                <a href="https://thesugaroots.com/" target="_blank" rel="noopener noreferrer" className="block">
+                    <img
+                        src="https://thesugaroots.com/wp-content/uploads/2026/02/SugaRoots-01.png"
+                        alt="TheSugaRoots"
+                        className="mx-auto h-12 w-auto object-contain dark:brightness-110"
+                    />
+                </a>
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 font-sans">
                     Welcome back
                 </h2>
@@ -243,8 +250,21 @@ export default function LoginPage() {
                         </form>
                     )}
 
-                    <div className="mt-8 text-center text-xs text-zinc-500 dark:text-zinc-400">
-                        <p>You must have an active Paid Memberships Pro subscription to login.</p>
+                    <div className="mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800 text-center space-y-2">
+                        <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                            You must be a <strong>TheSugaRoots</strong> subscriber to access this application.
+                        </p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                            Not a subscriber yet?{' '}
+                            <a
+                                href="https://thesugaroots.com/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-semibold text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300 underline underline-offset-2"
+                            >
+                                Join us at thesugaroots.com
+                            </a>
+                        </p>
                     </div>
                 </div>
             </div>

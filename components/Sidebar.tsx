@@ -38,7 +38,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 <div className="flex items-center justify-between h-16 px-6 border-b border-zinc-200 dark:border-zinc-800">
                     <img 
                         src="https://thesugaroots.com/wp-content/uploads/2026/02/SugaRoots-01.png" 
-                        alt="SugaRoots" 
+                        alt="TheSugaRoots"
                         className="h-8 w-auto object-contain dark:brightness-110" 
                     />
                     <button

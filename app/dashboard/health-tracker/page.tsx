@@ -68,7 +68,7 @@ export default function HealthTrackerPage() {
       
       {/* Header & Date Picker */}
       <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-6">Sugar Roots Health Tracker</h1>
+        <h1 className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-6">TheSugaRoots Health Tracker</h1>
 
         {syncError && (
           <div className="mb-4 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-sm text-amber-800 dark:text-amber-400">

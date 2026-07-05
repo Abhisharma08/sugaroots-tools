@@ -9,6 +9,7 @@ import {
     getPlanTotal,
     type Audience,
     type WorkoutPlan,
+    type PlanExercise,
 } from '@/lib/workout-plans';
 import {
     Home,
@@ -19,6 +20,8 @@ import {
     Check,
     ChevronLeft,
     Target,
+    X,
+    Expand,
 } from 'lucide-react';
 
 export default function WorkoutPlanner() {
@@ -238,6 +241,17 @@ function AudienceCard({
 
 function PlanDetail({ plan, onBack }: { plan: WorkoutPlan; onBack: () => void }) {
     const total = getPlanTotal(plan);
+    const [preview, setPreview] = useState<PlanExercise | null>(null);
+
+    // Close the preview with the Escape key
+    useEffect(() => {
+        if (!preview) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') setPreview(null);
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [preview]);
 
     return (
         <section className="animate-in fade-in slide-in-from-bottom-2 space-y-6">
@@ -304,9 +318,17 @@ function PlanDetail({ plan, onBack }: { plan: WorkoutPlan; onBack: () => void })
                             key={ex.name}
                             className="p-4 sm:p-5 flex flex-wrap items-center gap-4 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors"
                         >
-                            <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-2xl bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 border border-zinc-100 dark:border-zinc-800 flex items-center justify-center text-3xl sm:text-4xl overflow-hidden">
+                            <button
+                                type="button"
+                                onClick={() => setPreview(ex)}
+                                title={`View ${ex.name}`}
+                                className="relative w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-2xl bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 border border-zinc-100 dark:border-zinc-800 flex items-center justify-center text-3xl sm:text-4xl overflow-hidden group/tile cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
                                 <ExerciseMedia media={ex.media} fallback={ex.image} alt={ex.name} />
-                            </div>
+                                <span className="absolute inset-0 bg-black/0 group-hover/tile:bg-black/30 transition-colors flex items-center justify-center">
+                                    <Expand className="w-5 h-5 text-white opacity-0 group-hover/tile:opacity-100 transition-opacity" />
+                                </span>
+                            </button>
                             <div className="flex-1 min-w-[10rem]">
                                 <h4 className="font-semibold text-zinc-900 dark:text-zinc-100">{ex.name}</h4>
                                 <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">{ex.detail}</p>
@@ -329,6 +351,46 @@ function PlanDetail({ plan, onBack }: { plan: WorkoutPlan; onBack: () => void })
                     </>
                 )}
             </p>
+
+            {/* Exercise preview popup */}
+            {preview && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in"
+                    onClick={() => setPreview(null)}
+                    role="dialog"
+                    aria-modal="true"
+                    aria-label={preview.name}
+                >
+                    <div
+                        className="bg-white dark:bg-zinc-900 rounded-3xl shadow-2xl max-w-lg w-full overflow-hidden animate-in zoom-in-95"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-200 dark:border-zinc-800">
+                            <h3 className="font-bold text-lg text-zinc-900 dark:text-zinc-100 pr-4">
+                                {preview.name}
+                            </h3>
+                            <button
+                                onClick={() => setPreview(null)}
+                                aria-label="Close preview"
+                                className="p-2 rounded-full text-zinc-400 hover:text-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors shrink-0"
+                            >
+                                <X className="w-5 h-5" />
+                            </button>
+                        </div>
+
+                        <div className="h-72 sm:h-96 bg-gradient-to-br from-blue-50 to-green-50 dark:from-blue-900/20 dark:to-green-900/20 flex items-center justify-center text-8xl p-4">
+                            <ExerciseMedia media={preview.media} fallback={preview.image} alt={preview.name} fit="contain" />
+                        </div>
+
+                        <div className="px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+                            <p className="text-sm font-medium text-zinc-600 dark:text-zinc-300">{preview.detail}</p>
+                            <span className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-full text-sm font-bold">
+                                <Flame className="w-4 h-4" /> ≈ {preview.calories} kcal
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }

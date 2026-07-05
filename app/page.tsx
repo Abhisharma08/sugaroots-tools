@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function Home() {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen p-8 text-center bg-zinc-50 dark:bg-zinc-950">
-            <h1 className="text-5xl font-extrabold text-blue-600 mb-6">SugaRoot Tools</h1>
+            <h1 className="text-5xl font-extrabold text-blue-600 mb-6">TheSugaRoots Tools</h1>
             <p className="text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mb-12">
                 Track your goals, calculate your macros, and crush your fitness targets all in one place.
             </p>

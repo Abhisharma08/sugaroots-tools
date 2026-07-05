@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Fitness App API - Verify User
  * Description: Custom REST API endpoint to verify user subscription via PMPro and support OTP authentication.
- * Version: 1.2
+ * Version: 1.3
  * Author: Abhimanyu Sharma
  */
 
@@ -141,9 +141,25 @@ function fitness_app_request_otp_endpoint($request) {
     // Send the OTP
     if (is_email($login_id)) {
         $user_obj = get_userdata($user_id);
-        $subject = "Your Login OTP for Fitness App";
-        $message = "Your one-time password is: " . $otp . "\n\nThis code will expire in 5 minutes.";
-        wp_mail($login_id, $subject, $message);
+        $first_name = $user_obj ? $user_obj->first_name : '';
+        $greeting = $first_name ? "Hi " . esc_html($first_name) . "," : "Hi,";
+
+        $subject = "Your TheSugaRoots Login Code: " . $otp;
+        $message = '
+<div style="font-family: Arial, Helvetica, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; color: #27272a;">
+    <h2 style="color: #2563eb; margin: 0 0 16px;">TheSugaRoots</h2>
+    <p style="margin: 0 0 16px;">' . $greeting . '</p>
+    <p style="margin: 0 0 16px;">Use this one-time code to sign in to <strong>TheSugaRoots Tools</strong>:</p>
+    <p style="font-size: 32px; font-weight: bold; letter-spacing: 8px; background: #f4f4f5; border-radius: 12px; padding: 16px 24px; text-align: center; margin: 0 0 16px;">' . $otp . '</p>
+    <p style="margin: 0 0 16px; color: #71717a; font-size: 14px;">This code expires in 5 minutes. If you did not request it, you can safely ignore this email.</p>
+    <hr style="border: none; border-top: 1px solid #e4e4e7; margin: 24px 0;">
+    <p style="margin: 0; font-size: 13px; color: #71717a;">
+        TheSugaRoots &mdash; your partner in healthy living<br>
+        <a href="https://thesugaroots.com/" style="color: #2563eb;">thesugaroots.com</a>
+    </p>
+</div>';
+        $headers = array('Content-Type: text/html; charset=UTF-8');
+        wp_mail($login_id, $subject, $message, $headers);
     } else {
         // Log to error_log (SMS Provider to be added here in the future)
         error_log("FITNESS APP OTP for Mobile {$login_id}: {$otp}");

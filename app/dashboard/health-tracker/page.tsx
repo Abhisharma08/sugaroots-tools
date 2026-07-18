@@ -96,7 +96,7 @@ export default function HealthTrackerPage() {
       </div>
 
       {/* Sticky Tab Navigation */}
-      <div className="sticky top-0 z-40 bg-cyan-50/95 dark:bg-zinc-950/95 backdrop-blur-md pt-4 pb-4 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div className="sticky top-0 z-10 bg-cyan-50/95 dark:bg-zinc-950/95 backdrop-blur-md pt-4 pb-4 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0">
         <div className="flex overflow-x-auto gap-2 scrollbar-hide pb-2">
           {TABS.map(tab => (
             <button
@@ -127,7 +127,7 @@ export default function HealthTrackerPage() {
       </div>
 
       {/* Floating Save Button */}
-      <div className="fixed bottom-5 right-5 sm:bottom-8 sm:right-8 z-50">
+      <div className="fixed bottom-20 right-5 sm:bottom-8 sm:right-8 z-10 lg:bottom-8">
         {showSaveToast && (
           <div className="absolute bottom-full right-0 mb-4 px-4 py-3 bg-zinc-900 text-white text-sm font-semibold rounded-xl shadow-lg flex items-center gap-2 animate-in slide-in-from-bottom-2">
             <Check className="w-4 h-4 text-emerald-400" />

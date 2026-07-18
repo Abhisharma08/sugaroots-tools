@@ -5,10 +5,10 @@ export default function ToolsPage() {
     return (
         <div className="space-y-6 max-w-5xl">
             <header>
-                <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                <h1 className="sr-page-title">
                     Fitness Tools
                 </h1>
-                <p className="text-zinc-500 dark:text-zinc-400 mt-1">
+                <p className="sr-page-copy">
                     Calculate your daily needs or build a weight-loss plan.
                 </p>
             </header>

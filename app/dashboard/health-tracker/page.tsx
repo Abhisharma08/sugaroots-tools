@@ -64,11 +64,15 @@ export default function HealthTrackerPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto pb-24 font-sans relative">
+    <div className="max-w-5xl mx-auto pb-24 relative">
       
       {/* Header & Date Picker */}
-      <header className="mb-8">
-        <h1 className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-6">TheSugaRoots Health Tracker</h1>
+      <header className="mb-6">
+        <div className="mb-5 border-b border-cyan-100 pb-5 dark:border-zinc-800">
+          <p className="mb-1 text-sm font-semibold text-emerald-700 dark:text-emerald-400">DAILY CHECK-IN</p>
+          <h1 className="sr-page-title">Health Tracker</h1>
+          <p className="sr-page-copy">Keep your daily health picture current, one entry at a time.</p>
+        </div>
 
         {syncError && (
           <div className="mb-4 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-sm text-amber-800 dark:text-amber-400">
@@ -76,14 +80,14 @@ export default function HealthTrackerPage() {
           </div>
         )}
 
-        <div className="flex items-center justify-between bg-white dark:bg-zinc-900 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-          <button onClick={handlePrevDay} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">
+        <div className="flex items-center justify-between sr-surface p-3 sm:p-4">
+          <button onClick={handlePrevDay} className="grid size-11 place-items-center hover:bg-cyan-50 dark:hover:bg-zinc-800 rounded-lg transition-colors" aria-label="Previous day">
             <ChevronLeft className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
           </button>
           
           <div className="text-center">
-            <p className="text-sm font-semibold text-zinc-500 uppercase tracking-widest">Date</p>
-            <input 
+            <p className="text-xs font-semibold text-cyan-800/60 uppercase">Date</p>
+            <input
               type="date" 
               value={currentDate} 
               onChange={(e) => setCurrentDate(e.target.value)}
@@ -91,23 +95,23 @@ export default function HealthTrackerPage() {
             />
           </div>
           
-          <button onClick={handleNextDay} className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors">
+          <button onClick={handleNextDay} className="grid size-11 place-items-center hover:bg-cyan-50 dark:hover:bg-zinc-800 rounded-lg transition-colors" aria-label="Next day">
             <ChevronRight className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
           </button>
         </div>
       </header>
 
       {/* Sticky Tab Navigation */}
-      <div className="sticky top-0 z-40 bg-zinc-50/90 dark:bg-zinc-950/90 backdrop-blur-md pt-4 pb-4 mb-8 -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div className="sticky top-0 z-40 bg-cyan-50/95 dark:bg-zinc-950/95 backdrop-blur-md pt-4 pb-4 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0">
         <div className="flex overflow-x-auto gap-2 scrollbar-hide pb-2">
           {TABS.map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-5 py-2.5 rounded-full text-sm font-bold whitespace-nowrap transition-all shadow-sm ${
+              className={`min-h-11 px-4 rounded-lg text-sm font-semibold whitespace-nowrap transition-colors ${
                 activeTab === tab 
-                ? 'bg-blue-600 text-white border-transparent' 
-                : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800'
+                ? 'bg-cyan-800 text-white border-transparent'
+                : 'bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-cyan-100 dark:border-zinc-800 hover:bg-cyan-50 dark:hover:bg-zinc-800'
               }`}
             >
               {tab}
@@ -139,7 +143,7 @@ export default function HealthTrackerPage() {
         <button
           onClick={handleSave}
           disabled={isSaving}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 sm:px-6 sm:py-4 rounded-2xl shadow-xl shadow-blue-600/30 font-bold transition-all hover:scale-105 active:scale-95 disabled:opacity-70 disabled:hover:scale-100"
+          className="flex min-h-12 items-center gap-2 bg-cyan-800 hover:bg-cyan-900 text-white px-5 py-3 rounded-lg shadow-lg shadow-cyan-950/20 font-semibold transition-colors disabled:opacity-70"
         >
           <Save className={`w-5 h-5 ${isSaving ? 'animate-pulse' : ''}`} />
           {isSaving ? 'Saving…' : 'Save Day'}
@@ -149,4 +153,3 @@ export default function HealthTrackerPage() {
     </div>
   );
 }
-

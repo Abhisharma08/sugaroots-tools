@@ -3,12 +3,26 @@
 @custom-variant dark (&:is(.dark *));
 
 @layer base {
+    :root {
+        --sr-ink: #164e63;
+        --sr-muted: #52727d;
+        --sr-line: #cfe5e8;
+        --sr-surface: #ffffff;
+        --sr-canvas: #f1fbfc;
+        --sr-primary: #0e7490;
+        --sr-accent: #047857;
+    }
+
     html {
         font-size: 16px;
+        scroll-behavior: smooth;
     }
 
     body {
         min-width: 320px;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--sr-canvas);
+        color: var(--sr-ink);
     }
 
     input,
@@ -16,5 +30,48 @@
     textarea,
     button {
         font: inherit;
+    }
+
+    button,
+    a,
+    select {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    :focus-visible {
+        outline: 3px solid #22d3ee;
+        outline-offset: 2px;
+    }
+
+    h1,
+    h2,
+    h3 {
+        font-family: Georgia, 'Times New Roman', serif;
+        letter-spacing: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
+        }
+    }
+}
+
+@layer components {
+    .sr-page-title {
+        @apply text-2xl font-semibold text-cyan-950 sm:text-3xl dark:text-cyan-50;
+    }
+
+    .sr-page-copy {
+        @apply mt-1 max-w-2xl text-sm leading-6 text-cyan-800/70 sm:text-base dark:text-cyan-100/60;
+    }
+
+    .sr-surface {
+        @apply rounded-lg border border-cyan-100 bg-white shadow-sm dark:border-cyan-950 dark:bg-zinc-900;
     }
 }

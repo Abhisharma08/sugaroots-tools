@@ -6,10 +6,10 @@ export default function HabitsPage() {
     return (
         <div className="space-y-6">
             <header className="mb-8">
-                <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                <h1 className="sr-page-title">
                     Habits
                 </h1>
-                <p className="text-zinc-500 dark:text-zinc-400 mt-1">
+                <p className="sr-page-copy">
                     Track your daily routines and build consistency over time.
                 </p>
             </header>

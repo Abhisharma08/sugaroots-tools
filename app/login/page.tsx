@@ -120,7 +120,7 @@ export default function LoginPage() {
                 <a href="https://thesugaroots.com/" target="_blank" rel="noopener noreferrer" className="block">
                     <img
                         src="https://thesugaroots.com/wp-content/uploads/2026/02/SugaRoots-01.png"
-                        alt="TheSugaRoots"
+                        alt="SugaRoots"
                         className="mx-auto h-12 w-auto object-contain dark:brightness-110"
                     />
                 </a>
@@ -245,8 +245,8 @@ export default function LoginPage() {
                     )}
 
                     <div className="mt-8 pt-6 border-t border-zinc-100 dark:border-zinc-800 text-center space-y-2">
-                        <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                            You must be a <strong>TheSugaRoots</strong> subscriber to access this application.
+                        <p className="text-zinc-600 dark:text-zinc-400 mb-6 leading-relaxed">
+                            You must be a <strong>SugaRoots</strong> subscriber to access this application.
                         </p>
                         <p className="text-xs text-zinc-500 dark:text-zinc-400">
                             Not a subscriber yet?{' '}

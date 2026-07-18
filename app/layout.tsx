@@ -5,23 +5,23 @@ import { PwaServiceWorker } from '@/components/PwaServiceWorker';
 
 export const metadata: Metadata = {
     title: {
-        default: 'TheSugaRoots Tools — Your Personal Fitness Hub',
-        template: '%s | TheSugaRoots Tools',
+        default: 'SugaRoots Tools — Your Personal Fitness Hub',
+        template: '%s | SugaRoots Tools',
     },
     description:
-        'Track your goals, calculate your macros, and crush your fitness targets. BMR calculator, TDEE estimator, and weight loss planner in one place — exclusively for TheSugaRoots subscribers.',
+        'Track your goals, calculate your macros, and crush your fitness targets. BMR calculator, TDEE estimator, and weight loss planner in one place — exclusively for SugaRoots subscribers.',
     metadataBase: new URL('https://sugaroots-tools.vercel.app'),
     openGraph: {
-        title: 'TheSugaRoots Tools',
+        title: 'SugaRoots Tools',
         description: 'Your personal fitness hub — BMR, TDEE, weight loss planning and more.',
         type: 'website',
     },
     manifest: '/manifest.webmanifest',
-    applicationName: 'TheSugaRoots Tools',
+    applicationName: 'SugaRoots Tools',
     appleWebApp: {
         capable: true,
         statusBarStyle: 'default',
-        title: 'TheSugaRoots',
+        title: 'SugaRoots',
     },
     icons: {
         apple: '/icon-192.svg',

@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'TheSugaRoots Tools',
-        short_name: 'TheSugaRoots',
+        name: 'SugaRoots Tools',
+        short_name: 'SugaRoots',
         description: 'Your personal health and fitness dashboard.',
         start_url: '/dashboard',
         scope: '/',

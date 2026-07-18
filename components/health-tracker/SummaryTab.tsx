@@ -57,7 +57,7 @@ export default function SummaryTab() {
 
         {/* Net Calorie Balance */}
         <div className="lg:col-span-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm relative overflow-hidden">
-          <div className="flex flex-wrap justify-between items-start gap-3 mb-6 relative z-10">
+          <div className="flex flex-wrap justify-between items-start gap-3 mb-6">
             <div>
               <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">Net Calorie Balance</h3>
               <div className="flex items-end gap-3">
@@ -71,7 +71,7 @@ export default function SummaryTab() {
           </div>
 
           {/* Calorie Math Breakdown */}
-          <div className="grid grid-cols-3 gap-4 relative z-10">
+          <div className="grid grid-cols-3 gap-4">
             <div className="bg-zinc-50 dark:bg-zinc-800/50 rounded-2xl p-4 border border-zinc-100 dark:border-zinc-800">
               <span className="text-xs font-semibold text-zinc-500 block mb-1">Consumed</span>
               <span className="text-xl font-bold text-rose-600">{metrics.foodCalories}</span>

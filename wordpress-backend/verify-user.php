@@ -144,17 +144,17 @@ function fitness_app_request_otp_endpoint($request) {
         $first_name = $user_obj ? $user_obj->first_name : '';
         $greeting = $first_name ? "Hi " . esc_html($first_name) . "," : "Hi,";
 
-        $subject = "Your TheSugaRoots Login Code: " . $otp;
+        $subject = "Your SugaRoots Login Code: " . $otp;
         $message = '
-<div style="font-family: Arial, Helvetica, sans-serif; max-width: 480px; margin: 0 auto; padding: 24px; color: #27272a;">
-    <h2 style="color: #2563eb; margin: 0 0 16px;">TheSugaRoots</h2>
-    <p style="margin: 0 0 16px;">' . $greeting . '</p>
-    <p style="margin: 0 0 16px;">Use this one-time code to sign in to <strong>TheSugaRoots Tools</strong>:</p>
+<div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; padding: 32px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); font-family: -apple-system, BlinkMacSystemFont, \'Segoe UI\', Roboto, Helvetica, Arial, sans-serif;">
+    <h2 style="color: #2563eb; margin: 0 0 16px;">SugaRoots</h2>
+    
+    <p style="margin: 0 0 16px;">Use this one-time code to sign in to <strong>SugaRoots Tools</strong>:</p>
     <p style="font-size: 32px; font-weight: bold; letter-spacing: 8px; background: #f4f4f5; border-radius: 12px; padding: 16px 24px; text-align: center; margin: 0 0 16px;">' . $otp . '</p>
     <p style="margin: 0 0 16px; color: #71717a; font-size: 14px;">This code expires in 5 minutes. If you did not request it, you can safely ignore this email.</p>
     <hr style="border: none; border-top: 1px solid #e4e4e7; margin: 24px 0;">
-    <p style="margin: 0; font-size: 13px; color: #71717a;">
-        TheSugaRoots &mdash; your partner in healthy living<br>
+    <p style="margin: 0; color: #6b7280; font-size: 14px; text-align: center; border-top: 1px solid #e5e7eb; padding-top: 24px;">
+        SugaRoots &mdash; your partner in healthy living<br>
         <a href="https://thesugaroots.com/" style="color: #2563eb;">thesugaroots.com</a>
     </p>
 </div>';

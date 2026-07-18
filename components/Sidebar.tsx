@@ -33,7 +33,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
 
             {/* Sidebar drawer */}
             <div
-                className={`fixed inset-y-0 left-0 z-30 w-72 bg-white/95 dark:bg-zinc-900/95 border-r border-cyan-100 dark:border-zinc-800 backdrop-blur transform transition-transform duration-200 ease-out lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'
+                className={`fixed inset-y-0 left-0 z-30 w-72 bg-white/95 dark:bg-zinc-900/95 border-r border-cyan-100 dark:border-zinc-800 backdrop-blur transform transition-transform duration-200 ease-out lg:static lg:translate-x-0 flex flex-col ${isOpen ? 'translate-x-0' : '-translate-x-full'
                     }`}
             >
                 <div className="flex items-center justify-between h-[76px] px-6 border-b border-cyan-100 dark:border-zinc-800">
@@ -74,6 +74,19 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                         );
                     })}
                 </nav>
+
+                {/* Motivational card — desktop only */}
+                <div className="hidden lg:block mt-auto p-4">
+                    <div className="rounded-xl bg-gradient-to-br from-cyan-50 to-emerald-50 dark:from-cyan-950/40 dark:to-emerald-950/40 p-4 border border-cyan-100 dark:border-cyan-900/50">
+                        <p className="text-sm font-bold text-emerald-800 dark:text-emerald-300 mb-1">
+                            Track. Improve. Thrive.
+                        </p>
+                        <p className="text-xs text-emerald-700/70 dark:text-emerald-400/60 leading-relaxed">
+                            Small steps today lead to a healthier you tomorrow.
+                        </p>
+                        <div className="mt-3 text-2xl">🌿</div>
+                    </div>
+                </div>
             </div>
         </>
     );

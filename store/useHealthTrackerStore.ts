@@ -247,10 +247,9 @@ export const useHealthTrackerStore = create<HealthTrackerState>()(
     },
     {
       name: 'SugaRoots_health_tracker',
-      // Exclude internal flags from persistence
+      // Exclude internal flags and current date from persistence
       partialize: (state) => ({
         logs: state.logs,
-        currentDate: state.currentDate,
       }),
       onRehydrateStorage: () => {
         return (state) => {

@@ -79,8 +79,18 @@ export default function HealthTrackerPage() {
             <ChevronLeft className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
           </button>
           
-          <div className="text-center">
-            <p className="text-xs font-semibold text-cyan-800/60 uppercase">Date</p>
+          <div className="text-center flex flex-col items-center">
+            <div className="flex items-center gap-2">
+                <p className="text-xs font-semibold text-cyan-800/60 uppercase">Date</p>
+                {currentDate !== format(new Date(), 'yyyy-MM-dd') && (
+                    <button 
+                        onClick={() => setCurrentDate(format(new Date(), 'yyyy-MM-dd'))}
+                        className="text-[10px] bg-cyan-100 text-cyan-700 dark:bg-cyan-900/50 dark:text-cyan-400 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider hover:bg-cyan-200 transition-colors"
+                    >
+                        Today
+                    </button>
+                )}
+            </div>
             <input
               type="date" 
               value={currentDate} 

@@ -115,16 +115,6 @@ export default function SummaryTab() {
         </div>
       </div>
 
-      {/* Notes / Mood Field */}
-      <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm mt-6">
-        <h3 className="font-bold text-lg text-zinc-800 dark:text-zinc-200 mb-4">Mood & Notes</h3>
-        <textarea
-          value={log.notes}
-          onChange={(e) => updateLifestyle({ notes: e.target.value })}
-          placeholder="How are you feeling today? Any symptoms or general notes?"
-          className="w-full h-32 p-4 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl resize-none outline-none focus:border-blue-500 transition-colors"
-        />
-      </div>
 
     </div>
   );

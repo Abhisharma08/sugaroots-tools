@@ -70,6 +70,11 @@ export default function HabitTracker() {
 
     const handleToggle = (habitId: string | undefined, dateStr: string, completedDates: string[]) => {
         if (!user?.uid || !habitId) return;
+
+        // Prevent marking future dates
+        const todayIso = format(new Date(), 'yyyy-MM-dd');
+        if (dateStr > todayIso) return;
+
         const isCompleted = completedDates.includes(dateStr);
         toggleHabit(user.uid, habitId, dateStr, !isCompleted);
     };

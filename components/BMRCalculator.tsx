@@ -95,26 +95,26 @@ export default function BMRCalculator() {
     }, [watch, updateProfile, saveToFirestore, user]);
 
     return (
-        <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-3xl shadow-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 transition-all duration-300">
+        <div className="max-w-5xl bg-white dark:bg-zinc-900 rounded-lg shadow-sm overflow-hidden border border-zinc-200 dark:border-zinc-800">
             <div className="grid grid-cols-1 md:grid-cols-2">
                 {/* Form Section */}
-                <div className="p-6 sm:p-8 lg:p-10">
-                    <div className="flex items-center space-x-3 mb-8">
-                        <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl">
-                            <Activity className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                <div className="p-5 sm:p-6 lg:p-8">
+                    <div className="flex items-start gap-3 mb-6">
+                        <div className="p-2.5 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                            <Activity className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 font-sans tracking-tight">
-                                BMR & TDEE Calculator
+                            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
+                                Your details
                             </h2>
-                            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-0.5">
                                 Fill in your details for accurate results
                             </p>
                         </div>
                     </div>
 
-                    <form className="space-y-5">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <form className="space-y-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {/* Age */}
                             <div className="space-y-1.5">
                                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
@@ -167,7 +167,7 @@ export default function BMRCalculator() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {/* Weight */}
                             <div className="space-y-1.5">
                                 <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-2">
@@ -261,17 +261,17 @@ export default function BMRCalculator() {
                 </div>
 
                 {/* Results Section */}
-                <div className={`bg-gradient-to-br from-blue-500 to-green-600 p-8 lg:p-10 flex flex-col justify-center relative overflow-hidden text-white transition-opacity duration-300 ${hasErrors ? 'opacity-50' : ''}`}>
+                <div className={`bg-gradient-to-br from-blue-600 to-emerald-600 p-5 sm:p-6 lg:p-8 flex flex-col justify-center relative overflow-hidden text-white transition-opacity duration-300 ${hasErrors ? 'opacity-50' : ''}`}>
                     <div className="absolute top-0 right-0 -mt-16 -mr-16 w-64 h-64 bg-white/10 rounded-full blur-3xl mix-blend-overlay pointer-events-none" />
                     <div className="absolute bottom-0 left-0 -mb-16 -ml-16 w-48 h-48 bg-white/10 rounded-full blur-2xl mix-blend-overlay pointer-events-none" />
 
-                    <div className="relative z-10 space-y-8">
+                    <div className="relative z-10 space-y-6">
                         <div>
                             <p className="text-blue-100 font-medium text-sm tracking-wider uppercase mb-2">
                                 Basal Metabolic Rate
                             </p>
                             <div className="flex items-baseline space-x-2">
-                                <span className="text-5xl font-bold tracking-tight">{derived.bmr.toLocaleString()}</span>
+                                <span className="text-4xl sm:text-5xl font-bold">{derived.bmr.toLocaleString()}</span>
                                 <span className="text-blue-200 font-medium">kcal/day</span>
                             </div>
                             <p className="text-blue-100 text-sm mt-3 opacity-90 leading-relaxed max-w-sm">
@@ -286,7 +286,7 @@ export default function BMRCalculator() {
                                 Total Daily Energy Expenditure
                             </p>
                             <div className="flex items-baseline space-x-2">
-                                <span className="text-5xl font-bold tracking-tight">{derived.tdee.toLocaleString()}</span>
+                                <span className="text-4xl sm:text-5xl font-bold">{derived.tdee.toLocaleString()}</span>
                                 <span className="text-green-200 font-medium">kcal/day</span>
                             </div>
                             <p className="text-green-100 text-sm mt-3 opacity-90 leading-relaxed max-w-sm">

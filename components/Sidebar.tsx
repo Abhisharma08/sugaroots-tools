@@ -1,13 +1,14 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Activity, Calculator, Settings, X, ListChecks, Wind, HeartPulse, Dumbbell } from 'lucide-react';
+import { Home, Activity, X, ListChecks, Wind, HeartPulse, Dumbbell, Target } from 'lucide-react';
 
 const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
     { name: 'Health Tracker', href: '/dashboard/health-tracker', icon: HeartPulse },
     { name: 'Workout Planner', href: '/dashboard/workout-planner', icon: Dumbbell },
-    { name: 'Tools', href: '/dashboard/tools', icon: Activity },
+    { name: 'BMR & TDEE', href: '/dashboard/tools/bmr', icon: Activity },
+    { name: 'Weight Loss Plan', href: '/dashboard/tools/weight-loss', icon: Target },
     { name: 'Habits', href: '/dashboard/habits', icon: ListChecks },
     { name: 'Stress Relief', href: '/dashboard/stress-relief', icon: Wind },
 ];

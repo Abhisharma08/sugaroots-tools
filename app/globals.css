@@ -1,3 +1,20 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
+
+@layer base {
+    html {
+        font-size: 16px;
+    }
+
+    body {
+        min-width: 320px;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+        font: inherit;
+    }
+}

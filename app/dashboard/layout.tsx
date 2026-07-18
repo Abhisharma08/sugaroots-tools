@@ -24,7 +24,7 @@ export default function DashboardLayout({
                             <Header onMenuClick={() => setSidebarOpen(true)} />
 
                             <main className="flex-1 relative overflow-y-auto focus:outline-none">
-                                <div className="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+                                <div className="py-5 sm:py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
                                     <ErrorBoundary>
                                         {children}
                                     </ErrorBoundary>

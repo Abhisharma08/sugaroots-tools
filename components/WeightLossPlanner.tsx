@@ -82,17 +82,17 @@ export default function WeightLossPlanner() {
     const isTargetValid = goals.targetWeight < profile.weight;
 
     return (
-        <div className="max-w-4xl mx-auto bg-white dark:bg-zinc-900 rounded-3xl shadow-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 transition-all duration-300 mt-8">
+        <div className="max-w-5xl bg-white dark:bg-zinc-900 rounded-lg shadow-sm overflow-hidden border border-zinc-200 dark:border-zinc-800">
             <div className="grid grid-cols-1 md:grid-cols-2">
                 {/* Input Section */}
-                <div className="p-6 sm:p-8 lg:p-10 border-r border-zinc-100 dark:border-zinc-800/50">
-                    <div className="flex items-center gap-3 mb-8">
-                        <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl">
-                            <Target className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                <div className="p-5 sm:p-6 lg:p-8 border-r border-zinc-100 dark:border-zinc-800/50">
+                    <div className="flex items-start gap-3 mb-6">
+                        <div className="p-2.5 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg">
+                            <Target className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-zinc-800 dark:text-zinc-100 font-sans tracking-tight leading-tight">
-                                Weight Goal Planner
+                            <h2 className="text-lg font-semibold text-zinc-800 dark:text-zinc-100 leading-tight">
+                                Your goal
                             </h2>
                             <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
                                 Set your target weight and preferred pace.
@@ -100,7 +100,7 @@ export default function WeightLossPlanner() {
                         </div>
                     </div>
 
-                    <form className="space-y-5">
+                    <form className="space-y-4">
                         {/* Target Weight */}
                         <div className="space-y-1.5">
                             <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300 flex items-center justify-between">
@@ -189,7 +189,7 @@ export default function WeightLossPlanner() {
                 </div>
 
                 {/* Actionable Summary Section */}
-                <div className={`p-8 lg:p-10 flex flex-col justify-between space-y-6 bg-zinc-50/50 dark:bg-zinc-900/50 relative transition-opacity duration-300 ${hasErrors || !isTargetValid ? 'opacity-50 pointer-events-none' : ''}`}>
+                <div className={`p-5 sm:p-6 lg:p-8 flex flex-col justify-between space-y-6 bg-zinc-50/50 dark:bg-zinc-900/50 relative transition-opacity duration-300 ${hasErrors || !isTargetValid ? 'opacity-50 pointer-events-none' : ''}`}>
 
                     <div className="space-y-6">
                         {/* Summary Headers */}
@@ -205,7 +205,7 @@ export default function WeightLossPlanner() {
                         </div>
 
                         {/* Target Calories */}
-                        <div className="bg-white dark:bg-zinc-800 rounded-2xl p-6 shadow-sm border border-zinc-100 dark:border-zinc-700 relative overflow-hidden group hover:shadow-md transition-all">
+                        <div className="bg-white dark:bg-zinc-800 rounded-lg p-5 shadow-sm border border-zinc-100 dark:border-zinc-700 relative overflow-hidden group hover:shadow-md transition-all">
                             <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500" />
                             <div className="flex items-start justify-between">
                                 <div>
@@ -225,7 +225,7 @@ export default function WeightLossPlanner() {
                         </div>
 
                         {/* Exercise Target */}
-                        <div className="bg-white dark:bg-zinc-800 rounded-2xl p-6 shadow-sm border border-zinc-100 dark:border-zinc-700 relative overflow-hidden group hover:shadow-md transition-all">
+                        <div className="bg-white dark:bg-zinc-800 rounded-lg p-5 shadow-sm border border-zinc-100 dark:border-zinc-700 relative overflow-hidden group hover:shadow-md transition-all">
                             <div className="absolute top-0 left-0 w-1 h-full bg-orange-500" />
                             <div className="flex items-start justify-between">
                                 <div>

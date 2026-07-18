@@ -66,14 +66,8 @@ export default function HealthTrackerPage() {
   return (
     <div className="max-w-5xl mx-auto pb-24 relative">
       
-      {/* Header & Date Picker */}
-      <header className="mb-6">
-        <div className="mb-5 border-b border-cyan-100 pb-5 dark:border-zinc-800">
-          <p className="mb-1 text-sm font-semibold text-emerald-700 dark:text-emerald-400">DAILY CHECK-IN</p>
-          <h1 className="sr-page-title">Health Tracker</h1>
-          <p className="sr-page-copy">Keep your daily health picture current, one entry at a time.</p>
-        </div>
-
+      {/* Date Picker */}
+      <div className="mb-6">
         {syncError && (
           <div className="mb-4 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 text-sm text-amber-800 dark:text-amber-400">
             {syncError}
@@ -99,7 +93,7 @@ export default function HealthTrackerPage() {
             <ChevronRight className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
           </button>
         </div>
-      </header>
+      </div>
 
       {/* Sticky Tab Navigation */}
       <div className="sticky top-0 z-40 bg-cyan-50/95 dark:bg-zinc-950/95 backdrop-blur-md pt-4 pb-4 mb-6 -mx-4 px-4 sm:mx-0 sm:px-0">

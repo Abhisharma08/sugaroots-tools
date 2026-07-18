@@ -124,12 +124,6 @@ export default function LoginPage() {
                         className="mx-auto h-12 w-auto object-contain dark:brightness-110"
                     />
                 </a>
-                <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 font-sans">
-                    Welcome back
-                </h2>
-                <p className="mt-2 text-center text-sm text-zinc-600 dark:text-zinc-400">
-                    {step === 1 ? 'Enter your email or mobile number to access your fitness tools.' : `Enter the 6-digit code sent to ${loginId}`}
-                </p>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">

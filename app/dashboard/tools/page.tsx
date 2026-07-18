@@ -3,16 +3,7 @@ import { Activity, ArrowRight, Target } from 'lucide-react';
 
 export default function ToolsPage() {
     return (
-        <div className="space-y-6 max-w-5xl">
-            <header>
-                <h1 className="sr-page-title">
-                    Fitness Tools
-                </h1>
-                <p className="sr-page-copy">
-                    Calculate your daily needs or build a weight-loss plan.
-                </p>
-            </header>
-
+        <div className="max-w-5xl">
             <div className="grid gap-4 sm:grid-cols-2">
                 <Link href="/dashboard/tools/bmr" className="group border border-zinc-200 bg-white p-5 transition-colors hover:border-blue-300 hover:bg-blue-50/40 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-blue-800 dark:hover:bg-blue-950/20 rounded-lg">
                     <div className="flex items-start gap-4">

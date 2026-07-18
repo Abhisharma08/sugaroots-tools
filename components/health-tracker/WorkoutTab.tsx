@@ -55,8 +55,13 @@ export default function WorkoutTab() {
         </div>
         <div className="relative z-10 flex flex-wrap justify-between items-end gap-4">
           <div>
-            <p className="text-blue-200 font-medium mb-1">Total Workout Burn</p>
-            <p className="text-5xl font-bold">{metrics.workoutCalories} <span className="text-2xl font-medium text-blue-200">kcal</span></p>
+            <p className="text-blue-200 font-medium mb-1">Total Active Burn</p>
+            <div className="flex flex-col">
+              <p className="text-5xl font-bold">{metrics.totalBurned} <span className="text-2xl font-medium text-blue-200">kcal</span></p>
+              {log.steps > 0 && (
+                <p className="text-sm text-blue-200 mt-1 opacity-90">Includes {metrics.stepCalories} kcal from steps</p>
+              )}
+            </div>
           </div>
           <div className="text-right">
             <p className="text-blue-200 text-sm mb-1">Total Sessions</p>

@@ -28,21 +28,37 @@ export default function Header({ onMenuClick }: { onMenuClick: () => void }) {
         .slice(0, 2);
 
     return (
-        <header className="sticky top-0 z-10 flex flex-shrink-0 h-[76px] bg-white/90 dark:bg-zinc-900/90 border-b border-cyan-100 dark:border-zinc-800 backdrop-blur">
-            <button
-                type="button"
-                className="grid w-14 place-items-center text-cyan-800 lg:hidden"
-                onClick={onMenuClick}
-            >
-                <span className="sr-only">Open sidebar</span>
-                <Menu className="w-6 h-6" aria-hidden="true" />
-            </button>
-            <div className="flex justify-between flex-1 px-4 sm:px-6 lg:px-8">
+        <header className="sticky top-0 z-10 flex flex-shrink-0 h-[60px] lg:h-[76px] bg-white/90 dark:bg-zinc-900/90 border-b border-cyan-100 dark:border-zinc-800 backdrop-blur">
+            {/* ── Mobile header ── */}
+            <div className="flex items-center justify-between w-full px-4 lg:hidden">
+                <button
+                    type="button"
+                    className="grid size-10 place-items-center text-cyan-800 dark:text-cyan-200 rounded-lg"
+                    onClick={onMenuClick}
+                >
+                    <span className="sr-only">Open sidebar</span>
+                    <Menu className="w-6 h-6" aria-hidden="true" />
+                </button>
+                <img
+                    src="https://thesugaroots.com/wp-content/uploads/2026/02/SugaRoots-01.png"
+                    alt="SugaRoots"
+                    className="h-7 w-auto object-contain dark:brightness-110"
+                />
+                <button
+                    className="grid size-10 place-items-center text-zinc-500 hover:text-cyan-800 dark:hover:text-cyan-300 rounded-lg transition-colors"
+                    aria-label="View notifications"
+                >
+                    <Bell className="w-5 h-5" aria-hidden="true" />
+                </button>
+            </div>
+
+            {/* ── Desktop header ── */}
+            <div className="hidden lg:flex justify-between flex-1 px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-1 items-center">
-                    <p className="hidden text-sm font-semibold text-cyan-950 sm:block dark:text-cyan-50">Your daily wellbeing space</p>
+                    <p className="text-sm font-semibold text-cyan-950 dark:text-cyan-50">Your daily wellbeing space</p>
                     {userInfo && (
-                        <div className="flex items-center gap-2">
-                            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200 hidden sm:block">
+                        <div className="flex items-center gap-2 ml-4">
+                            <span className="text-sm font-medium text-zinc-700 dark:text-zinc-200">
                                 {displayName}
                             </span>
                             {userInfo.email && (
@@ -80,3 +96,4 @@ export default function Header({ onMenuClick }: { onMenuClick: () => void }) {
         </header>
     );
 }
+

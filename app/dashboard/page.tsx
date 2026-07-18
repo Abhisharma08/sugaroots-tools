@@ -10,21 +10,27 @@ import {
     Target,
     TrendingUp,
     ArrowRight,
-    Dumbbell,
     Scale,
     Ruler,
-    Calculator,
     Move,
     HeartPulse,
     Droplet,
     Moon,
     Footprints,
+    Dumbbell,
+    Calculator,
 } from 'lucide-react';
+
+function getGreeting(): { text: string; emoji: string } {
+    const hour = new Date().getHours();
+    if (hour < 12) return { text: 'GOOD MORNING', emoji: '☀️' };
+    if (hour < 17) return { text: 'GOOD AFTERNOON', emoji: '🌤️' };
+    return { text: 'GOOD EVENING', emoji: '🌙' };
+}
 
 export default function DashboardPage() {
     const { profile, derived, goals, userInfo } = useFitnessStore();
 
-    // Wait for client mount before reading persisted logs to avoid hydration mismatches
     const [mounted, setMounted] = useState(false);
     useEffect(() => {
         setMounted(true);
@@ -35,183 +41,177 @@ export default function DashboardPage() {
     const getLog = useHealthTrackerStore((s) => s.getLog);
     const log = mounted && todayLog ? getLog(todayIso) : getCachedEmptyLog(todayIso);
 
+    const greeting = getGreeting();
+    const firstName = userInfo?.firstName || 'there';
     const isLosingWeight = profile.weight > goals.targetWeight;
 
     return (
-        <div className="space-y-6">
-            {/* Header */}
-            <header className="flex flex-col gap-4 border-b border-cyan-100 pb-6 dark:border-zinc-800 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                    <p className="mb-1 text-sm font-semibold text-emerald-700 dark:text-emerald-400">TODAY&apos;S OVERVIEW</p>
-                    <h1 className="sr-page-title">
-                        {userInfo?.firstName
-                        ? `Hello, ${userInfo.firstName}`
-                        : 'Dashboard'}
-                    </h1>
-                    <p className="sr-page-copy">A clear view of your energy, movement, and recovery.</p>
-                </div>
-                <Link href="/dashboard/health-tracker" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-cyan-800 px-4 text-sm font-semibold text-white transition-colors hover:bg-cyan-900">
-                    <HeartPulse className="size-4" /> Update today
-                </Link>
-            </header>
+        <div className="space-y-5 max-w-lg mx-auto lg:max-w-none">
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {/* ── Greeting Header ── */}
+            <section className="sr-fade-up" style={{ animationDelay: '0ms' }}>
+                <p className="text-xs font-bold tracking-widest text-emerald-700 dark:text-emerald-400 mb-1">
+                    {greeting.text} {greeting.emoji}
+                </p>
+                <h1 className="text-2xl sm:text-3xl font-semibold text-cyan-950 dark:text-cyan-50" style={{ fontFamily: 'Georgia, serif' }}>
+                    Hello, {firstName} 👋
+                </h1>
+                <p className="mt-1 text-sm text-cyan-800/65 dark:text-cyan-100/60 leading-relaxed">
+                    You&apos;re doing great! Keep going<br className="sm:hidden" /> to reach your goals.
+                </p>
+            </section>
+
+            {/* ── Update Today CTA ── */}
+            <Link
+                href="/dashboard/health-tracker"
+                className="sr-fade-up flex items-center justify-center gap-2 w-full min-h-12 rounded-xl bg-cyan-900 dark:bg-cyan-800 text-white font-semibold text-sm shadow-lg shadow-cyan-900/20 hover:bg-cyan-950 dark:hover:bg-cyan-700 transition-colors"
+                style={{ animationDelay: '50ms' }}
+            >
+                <HeartPulse className="w-4 h-4" />
+                Update today
+            </Link>
+
+            {/* ── Metric Cards 2×2 ── */}
+            <div className="grid grid-cols-2 gap-3 sr-fade-up" style={{ animationDelay: '100ms' }}>
                 {/* BMR */}
                 <div className="sr-surface p-4 transition-shadow hover:shadow-md">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="grid size-10 place-items-center rounded-lg bg-cyan-100 dark:bg-cyan-950">
-                            <Activity className="size-5 text-cyan-700 dark:text-cyan-300" />
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="grid size-9 place-items-center rounded-lg bg-cyan-100 dark:bg-cyan-950">
+                            <Activity className="size-4 text-cyan-700 dark:text-cyan-300" />
                         </div>
-                        <span className="text-xs font-semibold text-cyan-900/55 uppercase">BMR</span>
+                        <span className="text-[11px] font-bold tracking-wider text-cyan-900/50 dark:text-cyan-100/50 uppercase">BMR</span>
                     </div>
-                    <p className="text-2xl font-semibold tabular-nums text-cyan-950 dark:text-cyan-50">
+                    <p className="text-2xl font-bold tabular-nums text-cyan-950 dark:text-cyan-50">
                         {derived.bmr.toLocaleString()}
                     </p>
-                    <p className="mt-1 text-sm text-cyan-800/65 dark:text-cyan-100/60">kcal/day at rest</p>
+                    <p className="mt-0.5 text-xs text-cyan-800/55 dark:text-cyan-100/50">kcal/day at rest</p>
                 </div>
 
                 {/* TDEE */}
                 <div className="sr-surface p-4 transition-shadow hover:shadow-md">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="grid size-10 place-items-center rounded-lg bg-emerald-100 dark:bg-emerald-950">
-                            <TrendingUp className="size-5 text-emerald-700 dark:text-emerald-300" />
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="grid size-9 place-items-center rounded-lg bg-emerald-100 dark:bg-emerald-950">
+                            <TrendingUp className="size-4 text-emerald-700 dark:text-emerald-300" />
                         </div>
-                        <span className="text-xs font-semibold text-cyan-900/55 uppercase">TDEE</span>
+                        <span className="text-[11px] font-bold tracking-wider text-cyan-900/50 dark:text-cyan-100/50 uppercase">TDEE</span>
                     </div>
-                    <p className="text-2xl font-semibold tabular-nums text-cyan-950 dark:text-cyan-50">
+                    <p className="text-2xl font-bold tabular-nums text-cyan-950 dark:text-cyan-50">
                         {derived.tdee.toLocaleString()}
                     </p>
-                    <p className="mt-1 text-sm text-cyan-800/65 dark:text-cyan-100/60">total daily energy</p>
+                    <p className="mt-0.5 text-xs text-cyan-800/55 dark:text-cyan-100/50">total daily energy</p>
                 </div>
 
-                {/* Daily Target */}
+                {/* Target */}
                 <div className="sr-surface p-4 transition-shadow hover:shadow-md">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="grid size-10 place-items-center rounded-lg bg-teal-100 dark:bg-teal-950">
-                            <Target className="size-5 text-teal-700 dark:text-teal-300" />
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="grid size-9 place-items-center rounded-lg bg-teal-100 dark:bg-teal-950">
+                            <Target className="size-4 text-teal-700 dark:text-teal-300" />
                         </div>
-                        <span className="text-xs font-semibold text-cyan-900/55 uppercase">Target</span>
+                        <span className="text-[11px] font-bold tracking-wider text-cyan-900/50 dark:text-cyan-100/50 uppercase">Target</span>
                     </div>
-                    <p className="text-2xl font-semibold tabular-nums text-cyan-950 dark:text-cyan-50">
+                    <p className="text-2xl font-bold tabular-nums text-cyan-950 dark:text-cyan-50">
                         {derived.recommendedDailyCalories.toLocaleString()}
                     </p>
-                    <p className="mt-1 text-sm capitalize text-cyan-800/65 dark:text-cyan-100/60">
-                        {goals.pace} {isLosingWeight ? 'deficit' : 'surplus'}
+                    <p className="mt-0.5 text-xs capitalize text-cyan-800/55 dark:text-cyan-100/50">
+                        {goals.pace} {isLosingWeight ? 'Deficit' : 'Surplus'}
                     </p>
                 </div>
 
-                {/* Exercise Burn */}
+                {/* Burn */}
                 <div className="sr-surface p-4 transition-shadow hover:shadow-md">
-                    <div className="flex items-center justify-between mb-4">
-                        <div className="grid size-10 place-items-center rounded-lg bg-amber-100 dark:bg-amber-950">
-                            <Move className="size-5 text-amber-700 dark:text-amber-300" />
+                    <div className="flex items-center justify-between mb-3">
+                        <div className="grid size-9 place-items-center rounded-lg bg-rose-100 dark:bg-rose-950">
+                            <Move className="size-4 text-rose-600 dark:text-rose-400" />
                         </div>
-                        <span className="text-xs font-semibold text-cyan-900/55 uppercase">Burn</span>
+                        <span className="text-[11px] font-bold tracking-wider text-cyan-900/50 dark:text-cyan-100/50 uppercase">Burn</span>
                     </div>
-                    <p className="text-2xl font-semibold tabular-nums text-cyan-950 dark:text-cyan-50">
+                    <p className="text-2xl font-bold tabular-nums text-cyan-950 dark:text-cyan-50">
                         {derived.exerciseBurn.toLocaleString()}
                     </p>
-                    <p className="mt-1 text-sm text-cyan-800/65 dark:text-cyan-100/60">active burn target</p>
+                    <p className="mt-0.5 text-xs text-cyan-800/55 dark:text-cyan-100/50">active burn target</p>
                 </div>
             </div>
 
-            {/* Two Column Layout */}
-            <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
-                {/* Health Snapshot Panel */}
-                <div className="lg:col-span-3 sr-surface p-5 sm:p-6 flex flex-col">
-                    <h2 className="text-lg font-semibold text-cyan-950 dark:text-cyan-50 mb-5 flex items-center gap-2">
-                        <HeartPulse className="w-5 h-5 text-rose-600" />
-                        Today's Health Snapshot
-                    </h2>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 flex-1 pb-1">
-                        <div className="flex flex-col items-center justify-center p-5 bg-amber-50 dark:bg-amber-950/30 rounded-lg border border-amber-100 dark:border-amber-900/50">
-                            <Footprints className="w-6 h-6 text-amber-600 mb-3" />
-                            <p className="text-2xl font-semibold tabular-nums text-amber-800 dark:text-amber-300">
-                                {log.steps.toLocaleString()}
-                            </p>
-                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 font-medium">Steps</p>
-                        </div>
-                        <div className="flex flex-col items-center justify-center p-5 bg-cyan-50 dark:bg-cyan-950/30 rounded-lg border border-cyan-100 dark:border-cyan-900/50">
-                            <Droplet className="w-6 h-6 text-cyan-600 mb-3" />
-                            <p className="text-2xl font-semibold tabular-nums text-cyan-800 dark:text-cyan-300">
-                                {log.water} <span className="text-xl opacity-60">/ 8</span>
-                            </p>
-                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 font-medium">Glasses</p>
-                        </div>
-                        <div className="flex flex-col items-center justify-center p-5 bg-violet-50 dark:bg-violet-950/30 rounded-lg border border-violet-100 dark:border-violet-900/50">
-                            <Moon className="w-6 h-6 text-violet-600 mb-3" />
-                            <p className="text-2xl font-semibold tabular-nums text-violet-800 dark:text-violet-300">
-                                {log.sleep.durationHours.toFixed(1)} <span className="text-xl opacity-60">hrs</span>
-                            </p>
-                            <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1 font-medium">Sleep</p>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Profile Summary */}
-                <div className="lg:col-span-2 sr-surface p-5 sm:p-6">
-                    <h2 className="text-lg font-semibold text-cyan-950 dark:text-cyan-50 mb-4 flex items-center gap-2">
-                        <Dumbbell className="w-5 h-5 text-cyan-700" />
-                        Your Profile
-                    </h2>
-                    <div className="space-y-4">
-                        <div className="flex items-center justify-between py-2 border-b border-zinc-100 dark:border-zinc-800">
-                            <span className="text-sm text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
-                                <Scale className="w-4 h-4" /> Weight
-                            </span>
-                            <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{profile.weight} kg</span>
-                        </div>
-                        <div className="flex items-center justify-between py-2 border-b border-zinc-100 dark:border-zinc-800">
-                            <span className="text-sm text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
-                                <Ruler className="w-4 h-4" /> Height
-                            </span>
-                            <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{profile.height} cm</span>
-                        </div>
-                        <div className="flex items-center justify-between py-2 border-b border-zinc-100 dark:border-zinc-800">
-                            <span className="text-sm text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
-                                <Target className="w-4 h-4" /> Goal
-                            </span>
-                            <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{goals.targetWeight} kg</span>
-                        </div>
-                        <div className="flex items-center justify-between py-2 border-b border-zinc-100 dark:border-zinc-800">
-                            <span className="text-sm text-zinc-500 dark:text-zinc-400">Age / Gender</span>
-                            <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 capitalize">
-                                {profile.age} yrs / {profile.gender}
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-between py-2">
-                            <span className="text-sm text-zinc-500 dark:text-zinc-400">Pace</span>
-                            <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200 capitalize px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">
-                                {goals.pace}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Quick Actions */}
-            <div className="rounded-lg border border-emerald-200 bg-emerald-50 p-5 dark:border-emerald-900 dark:bg-emerald-950/30">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                    <div>
-                        <h2 className="text-xl font-semibold text-emerald-950 dark:text-emerald-100 mb-1">
-                            Ready to update your stats?
-                        </h2>
-                        <p className="text-emerald-900/70 dark:text-emerald-100/70 text-sm">
-                            Use the fitness tools to recalculate your BMR, TDEE, and plan your goals.
+            {/* ── Today's Health Snapshot ── */}
+            <section className="sr-surface p-5 sr-fade-up" style={{ animationDelay: '150ms' }}>
+                <h2 className="text-base font-semibold text-cyan-950 dark:text-cyan-50 mb-4 flex items-center gap-2">
+                    <HeartPulse className="w-4 h-4 text-rose-500" />
+                    Today&apos;s Health Snapshot
+                </h2>
+                <div className="grid grid-cols-3 gap-3">
+                    {/* Steps */}
+                    <div className="flex flex-col items-center justify-center py-4 px-2 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-100 dark:border-amber-900/50">
+                        <Footprints className="w-5 h-5 text-amber-500 mb-2" />
+                        <p className="text-lg font-bold tabular-nums text-amber-700 dark:text-amber-300">
+                            {log.steps.toLocaleString()}
                         </p>
+                        <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 font-medium">Steps</p>
                     </div>
-                    <Link
-                        href="/dashboard/tools"
-                        className="inline-flex min-h-11 items-center gap-2 px-4 bg-emerald-700 text-white font-semibold rounded-lg hover:bg-emerald-800 transition-colors group whitespace-nowrap"
-                    >
-                        <Calculator className="w-4 h-4" />
-                        Open Tools
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
+                    {/* Water */}
+                    <div className="flex flex-col items-center justify-center py-4 px-2 bg-cyan-50 dark:bg-cyan-950/30 rounded-xl border border-cyan-100 dark:border-cyan-900/50">
+                        <Droplet className="w-5 h-5 text-cyan-500 mb-2" />
+                        <p className="text-lg font-bold tabular-nums text-cyan-700 dark:text-cyan-300">
+                            {log.water} <span className="text-sm opacity-50">/ 8</span>
+                        </p>
+                        <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 font-medium">Glasses</p>
+                    </div>
+                    {/* Sleep */}
+                    <div className="flex flex-col items-center justify-center py-4 px-2 bg-violet-50 dark:bg-violet-950/30 rounded-xl border border-violet-100 dark:border-violet-900/50">
+                        <Moon className="w-5 h-5 text-violet-500 mb-2" />
+                        <p className="text-lg font-bold tabular-nums text-violet-700 dark:text-violet-300">
+                            {log.sleep.durationHours.toFixed(1)} <span className="text-sm opacity-50">hrs</span>
+                        </p>
+                        <p className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 font-medium">Sleep</p>
+                    </div>
                 </div>
-            </div>
+            </section>
+
+            {/* ── Your Profile ── */}
+            <section className="sr-surface p-5 sr-fade-up" style={{ animationDelay: '200ms' }}>
+                <h2 className="text-base font-semibold text-cyan-950 dark:text-cyan-50 mb-3 flex items-center gap-2">
+                    <Dumbbell className="w-4 h-4 text-cyan-700 dark:text-cyan-400" />
+                    Your Profile
+                </h2>
+                <div className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                    <div className="flex items-center justify-between py-3">
+                        <span className="text-sm text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
+                            <Scale className="w-4 h-4" /> Weight
+                        </span>
+                        <span className="text-sm font-bold text-zinc-800 dark:text-zinc-200">{profile.weight} kg</span>
+                    </div>
+                    <div className="flex items-center justify-between py-3">
+                        <span className="text-sm text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
+                            <Ruler className="w-4 h-4" /> Height
+                        </span>
+                        <span className="text-sm font-bold text-zinc-800 dark:text-zinc-200">{profile.height} cm</span>
+                    </div>
+                    <div className="flex items-center justify-between py-3">
+                        <span className="text-sm text-zinc-500 dark:text-zinc-400 flex items-center gap-2">
+                            <Target className="w-4 h-4" /> Goal
+                        </span>
+                        <span className="text-sm font-bold text-zinc-800 dark:text-zinc-200">{goals.targetWeight} kg</span>
+                    </div>
+                </div>
+            </section>
+
+            {/* ── CTA Banner ── */}
+            <section
+                className="sr-fade-up flex items-center justify-between rounded-xl border border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/30 p-4"
+                style={{ animationDelay: '250ms' }}
+            >
+                <p className="text-sm font-medium text-emerald-950 dark:text-emerald-100">
+                    Ready to update your stats?
+                </p>
+                <Link
+                    href="/dashboard/tools"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-700 text-white text-sm font-semibold rounded-lg hover:bg-emerald-800 transition-colors group whitespace-nowrap"
+                >
+                    <Calculator className="w-3.5 h-3.5" />
+                    Open Tools
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+            </section>
         </div>
     );
 }
+

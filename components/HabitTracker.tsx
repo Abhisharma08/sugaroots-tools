@@ -3,7 +3,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useHabitStore } from '@/store/useHabitStore';
 import { useAuth } from '@/components/AuthProvider';
-import { Settings, Gauge, Plus, Zap, Loader2, LayoutGrid, Users, HeartPulse, Briefcase, Hash } from 'lucide-react';
+import { Gauge, Plus, Zap, Loader2, LayoutGrid, Users, HeartPulse, Briefcase, Hash } from 'lucide-react';
 import { format, subDays, isToday } from 'date-fns';
 
 const CATEGORY_ICONS: Record<string, React.ElementType> = {
@@ -43,10 +43,10 @@ export default function HabitTracker() {
         }
     }, [user?.uid, fetchHabits]);
 
-    // Generate the last 5 days (including today)
+    // Generate the last 5 days (including today), putting today FIRST for mobile visibility
     const dateColumns = useMemo(() => {
         return Array.from({ length: 5 }).map((_, i) => {
-            const date = subDays(new Date(), 4 - i); // [4 days ago, 3, 2, 1, today]
+            const date = subDays(new Date(), i); // [today, 1 day ago, 2, 3, 4]
             return {
                 date,
                 isoString: format(date, 'yyyy-MM-dd'),
@@ -116,9 +116,6 @@ export default function HabitTracker() {
                         <Gauge className="w-4 h-4 text-zinc-700 dark:text-zinc-300" />
                         <span className="text-zinc-800 dark:text-zinc-200">{completionPercentage.toFixed(1)}%</span>
                     </div>
-                    <button className="p-2 bg-zinc-100 dark:bg-zinc-900 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition">
-                        <Settings className="w-5 h-5 text-zinc-600 dark:text-zinc-400" />
-                    </button>
                 </div>
             </div>
 
@@ -142,19 +139,19 @@ export default function HabitTracker() {
                         );
                     })}
                     {isAddingCategory ? (
-                        <form onSubmit={handleAddCategory} className="flex items-center gap-2">
+                        <form onSubmit={handleAddCategory} className="flex items-center gap-2 shrink-0">
                             <input
                                 type="text"
                                 value={newCategoryName}
                                 onChange={(e) => setNewCategoryName(e.target.value)}
                                 placeholder="New Category"
-                                className="px-3 py-1.5 bg-zinc-50 border border-zinc-200 rounded-full text-sm outline-none focus:border-zinc-400 dark:bg-zinc-900 dark:border-zinc-800"
+                                className="w-32 sm:w-40 px-3 py-1.5 bg-zinc-50 border border-zinc-200 rounded-full text-sm outline-none focus:border-zinc-400 dark:bg-zinc-900 dark:border-zinc-800"
                                 autoFocus
                             />
-                            <button type="submit" className="text-xs font-semibold text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200">
+                            <button type="submit" className="text-xs font-semibold px-2 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-full text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-white">
                                 Save
                             </button>
-                            <button type="button" onClick={() => setIsAddingCategory(false)} className="text-xs text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
+                            <button type="button" onClick={() => setIsAddingCategory(false)} className="text-xs px-2 py-1 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300">
                                 Cancel
                             </button>
                         </form>
@@ -170,32 +167,34 @@ export default function HabitTracker() {
 
             {/* QUICK ADD INLINE ROW (Optional expanded state) */}
             {isAdding && (
-                <form onSubmit={handleAddHabit} className="flex gap-2 mb-4 animate-in fade-in slide-in-from-top-2">
+                <form onSubmit={handleAddHabit} className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-4 animate-in fade-in slide-in-from-top-2">
                     <input 
                         type="text" 
                         placeholder="e.g. Read 10 pages" 
                         value={newTitle}
                         onChange={(e) => setNewTitle(e.target.value)}
-                        className="flex-1 px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-sm outline-none focus:border-zinc-400 dark:bg-zinc-900 dark:border-zinc-800"
+                        className="flex-1 w-full px-3 py-2.5 sm:py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-sm outline-none focus:border-zinc-400 dark:bg-zinc-900 dark:border-zinc-800"
                         autoFocus
                         required
                     />
-                    <input 
-                        type="text" 
-                        placeholder="Category" 
-                        value={newCategory} 
-                        onChange={(e) => setNewCategory(e.target.value)}
-                        className="w-32 px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-sm outline-none focus:border-zinc-400 dark:bg-zinc-900 dark:border-zinc-800 placeholder:text-zinc-400"
-                        list="category-suggestions"
-                        required
-                    />
-                    <datalist id="category-suggestions">
-                        {dynamicCategories.filter(c => c !== 'All').map(c => (
-                            <option key={c} value={c} />
-                        ))}
-                    </datalist>
-                    <button type="submit" className="px-4 py-2 bg-yellow-400 text-yellow-950 font-bold rounded-xl text-sm hover:bg-yellow-500 transition">Add</button>
-                    <button type="button" onClick={() => setIsAdding(false)} className="px-3 text-zinc-400 text-sm hover:text-zinc-700">Cancel</button>
+                    <div className="flex gap-2 sm:gap-3">
+                        <input 
+                            type="text" 
+                            placeholder="Category" 
+                            value={newCategory} 
+                            onChange={(e) => setNewCategory(e.target.value)}
+                            className="flex-1 sm:w-32 sm:flex-none px-3 py-2.5 sm:py-2 bg-zinc-50 border border-zinc-200 rounded-xl text-sm outline-none focus:border-zinc-400 dark:bg-zinc-900 dark:border-zinc-800 placeholder:text-zinc-400"
+                            list="category-suggestions"
+                            required
+                        />
+                        <datalist id="category-suggestions">
+                            {dynamicCategories.filter(c => c !== 'All').map(c => (
+                                <option key={c} value={c} />
+                            ))}
+                        </datalist>
+                        <button type="submit" className="px-5 py-2.5 sm:py-2 sm:px-4 bg-yellow-400 text-yellow-950 font-bold rounded-xl text-sm hover:bg-yellow-500 transition whitespace-nowrap">Add</button>
+                        <button type="button" onClick={() => setIsAdding(false)} className="px-3 py-2.5 sm:py-2 text-zinc-400 text-sm hover:text-zinc-700 whitespace-nowrap">Cancel</button>
+                    </div>
                 </form>
             )}
 

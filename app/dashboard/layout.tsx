@@ -24,7 +24,7 @@ export default function DashboardLayout({
                         <div className="flex flex-col flex-1 w-0 overflow-hidden">
                             <Header onMenuClick={() => setSidebarOpen(true)} />
 
-                            <main className="flex-1 relative overflow-y-auto focus:outline-none">
+                            <main className="flex-1 relative overflow-y-auto overscroll-contain focus:outline-none">
                                 <div className="py-5 sm:py-7 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pb-24 lg:pb-7">
                                     <ErrorBoundary>
                                         {children}

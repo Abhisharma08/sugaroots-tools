@@ -213,7 +213,7 @@ export default function HabitTracker() {
                                     <span className={`text-[10px] sm:text-xs font-semibold uppercase tracking-wider mb-1 ${col.isToday ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-400'}`}>
                                         {col.dayStr}
                                     </span>
-                                    <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${
+                                    <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all ${
                                         col.isToday 
                                         ? 'border-yellow-400/50 relative' 
                                         : 'border-zinc-200 dark:border-zinc-800 text-zinc-600 dark:text-zinc-400'
@@ -268,7 +268,7 @@ export default function HabitTracker() {
                                                 <div key={idx} className="flex-1 flex justify-center">
                                                     <button
                                                         onClick={() => handleToggle(habit.id, col.isoString, habit.completedDates)}
-                                                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-2xl transition-all duration-300 transform active:scale-90 ${
+                                                        className={`w-11 h-11 sm:w-12 sm:h-12 rounded-2xl transition-all duration-300 transform active:scale-90 ${
                                                             isCompleted 
                                                             ? 'bg-lime-500 shadow-sm shadow-lime-500/20 text-white' 
                                                             : 'bg-lime-100/50 dark:bg-lime-900/10 hover:bg-lime-200/50 dark:hover:bg-lime-900/30'

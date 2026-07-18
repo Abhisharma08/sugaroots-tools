@@ -23,6 +23,7 @@
         font-family: Arial, Helvetica, sans-serif;
         background: var(--sr-canvas);
         color: var(--sr-ink);
+        overscroll-behavior-y: none;
     }
 
     input,
@@ -36,6 +37,7 @@
     a,
     select {
         -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
     }
 
     :focus-visible {
